@@ -17,5 +17,7 @@ namespace cs2_rpg.Game
             { Destination.Mountain , "Mountain" },
             { Destination.Lake , "Lake" }
         };
+
+        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!givexp" };
     }
 }

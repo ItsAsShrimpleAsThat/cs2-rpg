@@ -10,45 +10,87 @@ namespace cs2_rpg.Game
 {
     public static class Main
     {
-        private static Player player = new Player("gabe newell");
+        private static Dictionary<string, Player> players = new Dictionary<string, Player>();
         public static void RecieveInput(ChatMessage message)
         {
             if (message.message != null)
             {
                 if (message.message.StartsWith("!"))
                 {
+                    Player? player;
+
                     string[] splittedMsg = message.message.Split(" ");
                     string responsePrefix = "@ " + message.author + " ";
+                    string cmd = splittedMsg[0];
 
-                    switch (splittedMsg[0].ToLower())
+                    if (GameConstants.allCommands.Contains(cmd))
                     {
-                        case "!rpg":
-                            ChatSender.SendChatMessage(responsePrefix + "Welcome to CS2 RPG! Type !explore to explore");
-                            break;
-                        case "!explore":
-                            Destination[] destinations = player.GetExplorationOptions();
-                            ChatSender.SendChatMessage(responsePrefix + "Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, GameConstants.dest2Name));
-                            break;
-                        case "!option":
-                            if(player.isAwaitingOption)
+                        if (players.TryGetValue(message.author, out player))
+                        {
+                            // Player has joined playing right now so process their command
+                            switch (splittedMsg[0].ToLower())
                             {
-                                int pickedOption = -1;
-                                if (int.TryParse(splittedMsg[1], out pickedOption))
-                                {
-                                    if (pickedOption > 0 && pickedOption < player.maxAwaitingOption)
+                                case "!rpg":
+                                    ChatSender.SendChatMessage(responsePrefix + "You have already joined CS2 RPG. Type !help for a list of commands");
+                                    break;
+
+                                case "!explore":
+                                    Destination[] destinations = player.GetExplorationOptions();
+                                    ChatSender.SendChatMessage(responsePrefix + "Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, GameConstants.dest2Name));
+                                    break;
+
+                                case "!givexp":
+                                    Console.WriteLine("HELLO I AM GIVING XP ALERT ALERT");
+                                    player.xp += 50;
+                                    ChatSender.SendChatMessage(responsePrefix + "Your XP is " + player.xp);
+                                    break;
+
+                                case "!option":
+                                    if (player.isAwaitingOption)
                                     {
-                                        
+                                        int pickedOption = -1;
+                                        if (int.TryParse(splittedMsg[1], out pickedOption))
+                                        {
+                                            if (pickedOption > 0 && pickedOption < player.maxAwaitingOption)
+                                            {
+
+                                            }
+                                        }
                                     }
-                                }
+                                    else
+                                    {
+                                        ChatSender.SendChatMessage(responsePrefix + "You haven't been asked to choose an option.");
+                                    }
+                                    break;
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (splittedMsg[0].ToLower() == "!rpg")
                             {
-                                ChatSender.SendChatMessage(responsePrefix + "You haven't been asked to choose an option.");
+                                // They asked to join game, so add them to the game :)
+                                players.Add(message.author, new Player(message.author));
+                                ChatSender.SendChatMessage(responsePrefix + "You have successfuly joined CS2 RPG. Type !help for a list of commands");
+                                Console.WriteLine("All connected players are: " + PlayerlistToString());
                             }
-                            break;
+                        }
                     }
                 }
             }
+        }
+
+        private static string PlayerlistToString()
+        {
+            string plist = "";
+
+            foreach (var (playername, _) in players)
+            {
+                plist += playername + ", ";
+            }
+
+            plist = plist.Substring(0, plist.Length - 2);
+
+            return plist;
         }
     }
 }
