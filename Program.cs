@@ -9,11 +9,11 @@ namespace cs2_rpg
 {
     class Program
     {
-        private const string logPath = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\game\csgo\console.log";
+        
 
         static void Main(string[] args)
         {
-            Thread listenerThread = new Thread(() => ChatListener.ParseMessageFromConsole(logPath, HandleMessage));
+            Thread listenerThread = new Thread(() => ChatListener.ParseMessageFromConsole(HandleMessage));
             listenerThread.IsBackground = true;
             listenerThread.Start();
             Console.WriteLine("Started Listening to CS2 Chat...");
