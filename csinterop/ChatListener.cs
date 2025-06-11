@@ -26,32 +26,35 @@ namespace cs2_rpg.csinterop
                 if (!string.IsNullOrWhiteSpace(line) && !line.Contains('\0'))
                 {
                     // check if console line is chat message
-                    if (line.Substring(16, 5) == "[ALL]")
+                    if (line.Length > 22)
                     {
-                        try
+                        if (line.Substring(16, 5) == "[ALL]")
                         {
-                            // there's an invisible unicode U+200E character dividing the username from the message. thanks Pandaptable (nemmy) i stole this from you :3
-                            string[] parts = line.Substring(22, line.Length - 22).Split("\u200e");
-
-                            string username = parts[0];
-                            string message;
-
-                            if (parts[1].Substring(0, 1) == ":")
+                            try
                             {
-                                message = parts[1].Substring(2, parts[1].Length - 2);
-                            }
-                            else
-                            {
-                                message = parts[1].Substring(9, parts[1].Length - 9);
-                            }
+                                // there's an invisible unicode U+200E character dividing the username from the message. thanks Pandaptable (nemmy) i stole this from you :3
+                                string[] parts = line.Substring(22, line.Length - 22).Split("\u200e");
 
-                            callback(new ChatMessage(username, message));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("Error in parsing chat message: " + ex.Message);
-                            Console.WriteLine("Raw Console line is:");
-                            Console.WriteLine(line);
+                                string username = parts[0];
+                                string message;
+
+                                if (parts[1].Substring(0, 1) == ":")
+                                {
+                                    message = parts[1].Substring(2, parts[1].Length - 2);
+                                }
+                                else
+                                {
+                                    message = parts[1].Substring(9, parts[1].Length - 9);
+                                }
+
+                                callback(new ChatMessage(username, message));
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error in parsing chat message: " + ex.Message);
+                                Console.WriteLine("Raw Console line is:");
+                                Console.WriteLine(line);
+                            }
                         }
                     }
                 }

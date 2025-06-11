@@ -13,8 +13,8 @@ namespace cs2_rpg.csinterop
         {
             try
             {
-                Directory.CreateDirectory(Path.Combine([Constants.csCFGPath, "cs2rpg"]));
-                File.WriteAllLines(Path.Combine([Constants.csCFGPath, "cs2rpg", name + ".cfg"]), contents);
+                Directory.CreateDirectory(Constants.csCFGPath);
+                File.WriteAllLines(Path.Combine([Constants.csCFGPath, name + ".cfg"]), contents);
             }
             catch(Exception ex)
             {
@@ -22,9 +22,55 @@ namespace cs2_rpg.csinterop
             }
         }
 
-        public static void CreateLooperCFG()
+        public static void CreateLooperCFGs()
         {
-            WriteCFGFile(Constants.loopCFGFilename, Constants.loopCFGContents);
+            Directory.CreateDirectory(Constants.csCFGPath);
+
+            long accumulatedDelay = 0;
+            for (int i = 0; i < Constants.numLoopFiles; i++)
+            {
+                using (StreamWriter sw = new StreamWriter(Path.Combine([Constants.csCFGPath, Constants.loopCFGFilename + i.ToString() + ".cfg"])))
+                {
+                    if (i == 0)
+                    {
+                        sw.WriteLine("alias \"" + Constants.loopMacro + "\" \"exec " + Constants.cfgSubfolder + "/" + Constants.chatCFGFilename + "\"");
+                    }
+
+                    sw.WriteLine("sleep " + accumulatedDelay.ToString());
+
+                    for (int repeat = 0; repeat < Constants.numLoopRepeatsPerFile; repeat++)
+                    {
+                        sw.WriteLine("sleep " + Constants.loopDeltaTime);
+                        sw.WriteLine(Constants.loopMacro);
+                        accumulatedDelay += Constants.loopDeltaTime;
+                    }
+                }
+
+                accumulatedDelay += Constants.loopDeltaTime;
+
+                Console.WriteLine("Finished writing " + (i + 1).ToString() + "/" + Constants.numLoopFiles.ToString() + " loop CFG files");
+            }
+
+            using (StreamWriter sw = new StreamWriter(Path.Combine([Constants.csCFGPath, Constants.loopStartExecName + ".cfg"])))
+            {
+                sw.WriteLine("sv_cheats true");
+                sw.WriteLine("exec_async " + Constants.cfgSubfolder + "/" + Constants.asyncStarterFile);
+            }
+
+            using (StreamWriter sw = new StreamWriter(Path.Combine([Constants.csCFGPath, Constants.asyncStarterFile + ".cfg"])))
+            {
+                for (int i = 0; i < Constants.numLoopFiles; i++)
+                {
+                    sw.WriteLine("exec_async " + Constants.cfgSubfolder + "/" + Constants.loopCFGFilename + i.ToString());
+                }
+            }
+
+            using (StreamWriter sw = new StreamWriter(Path.Combine([Constants.csCFGPath, Constants.chatCFGFilename + ".cfg"])))
+            {
+                sw.WriteLine("echo test");
+            }
+
+            Console.WriteLine("Finisehd writing CFG files");
         }
     }
 }
