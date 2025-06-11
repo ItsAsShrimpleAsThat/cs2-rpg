@@ -1,0 +1,47 @@
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Bb]uild[Ll]og.*
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+.vs/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Rider-specific (if you use JetBrains too)
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+
+# Logs
+*.log
+
+# Others
+*.tmp
+*.bak
+*.old
+*.orig
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Secret manager (safe to ignore, but watch what you commit!)
+**/secrets.json
+
+# Optional: uncomment if you don't want test results committed
+# TestResults/
