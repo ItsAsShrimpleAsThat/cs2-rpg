@@ -17,11 +17,13 @@ namespace cs2_rpg
         public static readonly string loopCFGFilename = @"looper";
         public static readonly string chatCFGFilename = @"sendchat";
 
-        public static readonly int loopDeltaTime = 150;
+        public static readonly int loopDeltaTime = 50; // in frames
         public static readonly int numLoopFiles = 10;
         public static readonly int numLoopRepeatsPerFile = 70_000;
         public static readonly string loopMacro = "l";
         public static readonly string loopStartExecName = "startbot";
         public static readonly string asyncStarterFile = "loopasyncstarterDONOTRUN";
+
+        public static readonly long sendMessageTimeoutMs = 3000;
     }
 }

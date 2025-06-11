@@ -9,6 +9,9 @@ namespace cs2_rpg.csinterop
 {
     public static class CFG
     {
+        private static readonly string sendchatcfgpath = Path.Combine([Constants.csCFGPath, Constants.chatCFGFilename + ".cfg"]);
+        private static readonly string tempsendchatcfgpath = Path.Combine([Constants.csCFGPath, Constants.chatCFGFilename + "temp" + ".cfg"]);
+
         public static void WriteCFGFile(string name, string[] contents)
         {
             try
@@ -65,12 +68,30 @@ namespace cs2_rpg.csinterop
                 }
             }
 
-            using (StreamWriter sw = new StreamWriter(Path.Combine([Constants.csCFGPath, Constants.chatCFGFilename + ".cfg"])))
+            using (StreamWriter sw = new StreamWriter(sendchatcfgpath))
             {
-                sw.WriteLine("echo test");
+                sw.Write("");
             }
 
             Console.WriteLine("Finisehd writing CFG files");
+            Console.WriteLine("Assuming 150fps average framerate, bot should run for " + (Constants.loopDeltaTime * Constants.numLoopRepeatsPerFile / 150.0 * Constants.numLoopFiles / 60.0 / 60.0).ToString() + " hours");
+        }
+
+        public static void SetMessage(string message)
+        {
+            using (StreamWriter sw = new StreamWriter(tempsendchatcfgpath))
+            {
+                sw.Write("say \"" + message + "\"");
+            }
+            File.Replace(tempsendchatcfgpath, sendchatcfgpath, null);
+        }
+
+        public static void ClearMessage()
+        {
+            using (StreamWriter sw = new StreamWriter(sendchatcfgpath))
+            {
+                sw.Write("");
+            }
         }
     }
 }

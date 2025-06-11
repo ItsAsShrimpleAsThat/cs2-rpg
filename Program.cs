@@ -9,8 +9,6 @@ namespace cs2_rpg
 {
     class Program
     {
-        
-
         static void Main(string[] args)
         {
             Console.WriteLine("Creating Looper CFG Files...");
@@ -21,14 +19,24 @@ namespace cs2_rpg
             listenerThread.Start();
             Console.WriteLine("Started Listening to CS2 Chat...");
 
+            Thread senderThread = new Thread(ChatSender.StartMessageSender);
+            senderThread.IsBackground = true;
+            senderThread.Start();
+
+            Thread.Sleep(4000);
+
             Console.WriteLine("Finished starting. Press Enter to stop cleanly");
             Console.ReadLine();
+            CFG.ClearMessage();
         }
 
         static void HandleMessage(ChatMessage message)
         {
+            Console.WriteLine("=== MESSAGE RECIEVED! ===");
             Console.WriteLine("Username: " + message.author);
             Console.WriteLine("Message: " + message.message);
+
+            ChatSender.CheckIfMessageSent(message.message);
         }
     }
 }

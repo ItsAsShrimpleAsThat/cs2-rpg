@@ -18,7 +18,7 @@ namespace cs2_rpg.csinterop
 
                 if (line == null)
                 {
-                    Thread.Sleep(100);
+                    Thread.Sleep(50);
                     continue;
                 }
 
