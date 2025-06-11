@@ -53,8 +53,22 @@ namespace cs2_rpg.Game
                                         {
                                             if (pickedOption > 0 && pickedOption < player.maxAwaitingOption)
                                             {
-
+                                                if(player.optionCallback != null)
+                                                {
+                                                    player.optionCallback(pickedOption);
+                                                }
+                                                
+                                                player.isAwaitingOption = false;
+                                                player.maxAwaitingOption = -1;
                                             }
+                                            else
+                                            {
+                                                ChatSender.SendChatMessage(responsePrefix + "Your option must be between 1 and " + player.maxAwaitingOption + " inclusive.");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ChatSender.SendChatMessage(responsePrefix + "Your option is not a valid number.");
                                         }
                                     }
                                     else

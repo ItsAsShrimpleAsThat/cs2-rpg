@@ -13,6 +13,7 @@ namespace cs2_rpg.Game
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
         public int xp = 0;
+        public Action<int> optionCallback;
 
         public Player(string username)
         {

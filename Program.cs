@@ -33,9 +33,12 @@ namespace cs2_rpg
 
         static void HandleMessage(ChatMessage message)
         {
-            Console.WriteLine("=== MESSAGE RECIEVED! ===");
-            Console.WriteLine("Username: " + message.author);
-            Console.WriteLine("Message: " + message.message);
+            if (false)
+            {
+                Console.WriteLine("=== MESSAGE RECIEVED! ===");
+                Console.WriteLine("Username: " + message.author);
+                Console.WriteLine("Message: " + message.message);
+            }
 
             ChatSender.CheckIfMessageSent(message.message);
             Game.Main.RecieveInput(message);
