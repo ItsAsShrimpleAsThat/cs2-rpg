@@ -23,7 +23,8 @@ namespace cs2_rpg
             senderThread.IsBackground = true;
             senderThread.Start();
 
-            Thread.Sleep(4000);
+            Thread.Sleep(500);
+            ChatSender.SendChatMessage("CS2 RPG is active. Type !rpg to start.");
 
             Console.WriteLine("Finished starting. Press Enter to stop cleanly");
             Console.ReadLine();
@@ -37,6 +38,7 @@ namespace cs2_rpg
             Console.WriteLine("Message: " + message.message);
 
             ChatSender.CheckIfMessageSent(message.message);
+            Game.Main.RecieveInput(message);
         }
     }
 }

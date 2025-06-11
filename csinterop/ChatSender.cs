@@ -24,7 +24,6 @@ namespace cs2_rpg.csinterop
             {
                 if(messageQueue.Count == 0)
                 {
-                    CFG.ClearMessage();
                     Thread.Sleep(100);
                     continue;
                 }
@@ -35,6 +34,10 @@ namespace cs2_rpg.csinterop
                     {
                         awaitingMessage = messageQueue.Dequeue().message;
                         CFG.SetMessage(awaitingMessage);
+                    }
+                    else
+                    {
+                        CFG.ClearMessage();
                     }
                 }
                 else
