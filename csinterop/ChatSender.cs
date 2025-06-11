@@ -10,7 +10,7 @@ namespace cs2_rpg.csinterop
     {
         public void SendChatMessage(string message)
         {
-
+            
         }
     }
 }

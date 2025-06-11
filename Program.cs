@@ -13,6 +13,8 @@ namespace cs2_rpg
 
         static void Main(string[] args)
         {
+            CFG.CreateLooperCFG();
+
             Thread listenerThread = new Thread(() => ChatListener.ParseMessageFromConsole(HandleMessage));
             listenerThread.IsBackground = true;
             listenerThread.Start();
