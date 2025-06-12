@@ -15,7 +15,8 @@ namespace cs2_rpg.Game
             { Destination.Desert , "Desert" },
             { Destination.Grassland , "Grassland" },
             { Destination.Mountain , "Mountain" },
-            { Destination.Lake , "Lake" }
+            { Destination.Lake , "Lake" },
+            { Destination.Swamp , "Swamp" }
         };
 
         public static Dictionary<PlayerState, string> pstate2Name = new Dictionary<PlayerState, string>()
@@ -37,5 +38,18 @@ namespace cs2_rpg.Game
         };
 
         public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!givexp" };
+
+        public static Dictionary<Destination, Type[]> typesInDests = new Dictionary<Destination, Type[]>()
+        {
+            { Destination.Forest , new Type[] { Type.Earth, Type.Poison } },
+            { Destination.Desert , new Type[] { Type.Earth, Type.Fire } },
+            { Destination.Grassland , new Type[] { Type.Poison, Type.Fire} },
+            { Destination.Mountain , new Type[] { Type.Earth, Type.Water} },
+            { Destination.Lake , new Type[] { Type.Water, Type.Fire} },
+            { Destination.Swamp , new Type[] { Type.Water, Type.Poison} },
+        };
+
+        public static readonly int baseHealth = 30;
+        public static readonly int baseDefense = 8;
     }
 }

@@ -24,7 +24,7 @@ namespace cs2_rpg
             senderThread.Start();
 
             Thread.Sleep(500);
-            ChatSender.SendChatMessage("CS2 RPG is active. Type !rpg to start.");
+            ChatSender.SendChatMessage("CS2 RPG is active. Type !rpg to join.");
 
             Console.WriteLine("Finished starting. Press Enter to stop cleanly");
             Console.ReadLine();

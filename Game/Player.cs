@@ -14,18 +14,18 @@ namespace cs2_rpg.Game
         public PlayerState playerState;
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
-        public int xp = 0;
-        public int health;
-        public int maxHP;
+        public int xp = 5;
+        public int health = GameConstants.baseHealth;
+        public int maxHP = GameConstants.baseHealth;
+        public int defense = GameConstants.baseDefense;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
-        private BattleAction[] battleActions = new BattleAction[5];
+        private BattleAction[] battleActions = new BattleAction[5] { BattleAction.Strike, BattleAction.Focus, BattleAction.Sting, BattleAction.Defend, BattleAction.UseItem };
 
         public Player(string username)
         {
             this.username = username;
             this.playerState = PlayerState.Free;
-           
         }
 
         private Random random = new Random();
@@ -39,7 +39,7 @@ namespace cs2_rpg.Game
             if (random.Next(0, 2) == 0)
             {
                 ChatSender.SendChatMessage("You explored the " + destName + " and encountered a(/n) enemy!", username);
-                StartBattle(new Enemy("Test Enemy", Type.Water, 10, 10, 50, 50, 350));
+                StartBattle(MakeEnemy(pickedDestination));
             }
             else
             {
@@ -84,6 +84,17 @@ namespace cs2_rpg.Game
             }
         }
 
+        private Enemy MakeEnemy(Destination dest)
+        {
+            Type enemyType = GameConstants.typesInDests[dest][random.Next(0, 2)];
+            EnemyPrefab prefab = Enemies.GetRandomPrefabFromType(enemyType);
+
+            int enemyXP = Enemies.PlayerXPtoEnemyXP(xp);
+            int enemyHP = (int)(Enemies.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
+            int enemyDefense = (int)(Enemies.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
+            return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP);
+        }
+        
         public void MyTurn(Enemy enemy)
         {
             

@@ -12,6 +12,7 @@ namespace cs2_rpg.Game
         Desert = 1,
         Grassland = 2,
         Mountain = 3,
-        Lake = 4
+        Lake = 4,
+        Swamp = 5
     }
 }
