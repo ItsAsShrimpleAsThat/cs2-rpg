@@ -18,6 +18,14 @@ namespace cs2_rpg.csinterop
             Console.WriteLine("Enqueueing Message: " + message);
         }
 
+        public static void SendChatMessage(string message, string recipient)
+        {
+            messageQueue.Enqueue(new EnqueuedMessage("@" + recipient + " " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+
+            Console.WriteLine("Enqueueing Message to " + recipient + ": " + message);
+        }
+
+
         public static void StartMessageSender()
         {
             while(true)

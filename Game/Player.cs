@@ -15,6 +15,8 @@ namespace cs2_rpg.Game
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
         public int xp = 0;
+        public int health;
+        public int maxHP;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
 
@@ -35,12 +37,13 @@ namespace cs2_rpg.Game
 
             if (random.Next(0, 2) == 0)
             {
-
-                ChatSender.SendChatMessage("You explored the " + destName + " and encountered a(/n) enemy!");
+                ChatSender.SendChatMessage("You explored the " + destName + " and encountered a(/n) enemy!", username);
+                StartBattle(new Enemy("Test Enemy", Type.Water, 10, 10, 50, 50, 350));
             }
             else
             {
-                ChatSender.SendChatMessage("You explored the " + destName + " and found a [item]");
+                ChatSender.SendChatMessage("You explored the " + destName + " and found a [item]", username);
+                playerState = PlayerState.Free;
             }
         }
 
@@ -65,16 +68,17 @@ namespace cs2_rpg.Game
             return optionsString;
         }
 
-        public void StartBattle()
+        public void StartBattle(Enemy enemy)
         {
-
+            playerState = PlayerState.InBattle;
+            ChatSender.SendChatMessage(enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + ", health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + ", type: " + enemy.type + "] ===vs=== " + username + " [ lvl: " + XP.XPToLevel(xp) + ", health: " + health.ToString() + "/" + maxHP.ToString() + "]", username); 
         }
 
         public void FindItem()
         {
 
         }
-        
+
         public T[] PickNRandomElementsFromArray<T>(T[] source, int num)
         {
             return Shuffle<T>(source).Take(num).ToArray();
