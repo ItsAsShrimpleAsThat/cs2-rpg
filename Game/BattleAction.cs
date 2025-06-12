@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    internal class Attack
+    internal enum BattleAction : int
     {
-        public int damage;
-        public int defensepen;
+        UseItem = 0,
+        Strike = 1,
+        Focus = 2,
+        Sting = 3,
+        Defend = 4
     }
 }

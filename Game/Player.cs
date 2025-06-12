@@ -19,6 +19,7 @@ namespace cs2_rpg.Game
         public int maxHP;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
+        private BattleAction[] battleActions = new BattleAction[5];
 
         public Player(string username)
         {
@@ -70,13 +71,32 @@ namespace cs2_rpg.Game
 
         public void StartBattle(Enemy enemy)
         {
+            ChatSender.SendChatMessage(GetBattleVs(enemy), username);
             playerState = PlayerState.InBattle;
-            ChatSender.SendChatMessage(enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + ", health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + ", type: " + enemy.type + "] ===vs=== " + username + " [ lvl: " + XP.XPToLevel(xp) + ", health: " + health.ToString() + "/" + maxHP.ToString() + "]", username); 
+
+            if (random.Next(0, 2) == 0)
+            {
+                ChatSender.SendChatMessage("It's your turn. What would you like to do? Respond with !option #. " + PresentAsOptions<BattleAction>(battleActions, GameConstants.battleAction2Name), username);
+            }
+            else
+            {
+                ChatSender.SendChatMessage("It's the enemy's turn. They did something, i don't know what they did yet because I haven't implemented this yet", username);
+            }
+        }
+
+        public void MyTurn(Enemy enemy)
+        {
+            
         }
 
         public void FindItem()
         {
 
+        }
+
+        private string GetBattleVs(Enemy enemy)
+        {
+            return enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + ", health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + ", type: " + enemy.type + "] ===vs=== " + username + " [ lvl: " + XP.XPToLevel(xp) + ", health: " + health.ToString() + "/" + maxHP.ToString() + "]";
         }
 
         public T[] PickNRandomElementsFromArray<T>(T[] source, int num)

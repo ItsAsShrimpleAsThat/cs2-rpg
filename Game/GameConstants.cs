@@ -27,6 +27,15 @@ namespace cs2_rpg.Game
             { PlayerState.Dead , "Dead" },
         };
 
+        public static Dictionary<BattleAction, string> battleAction2Name = new Dictionary<BattleAction, string>()
+        {
+            { BattleAction.UseItem , "Use Item" },
+            { BattleAction.Strike , "Strike" },
+            { BattleAction.Focus , "Focus" },
+            { BattleAction.Sting , "Sting" },
+            { BattleAction.Defend , "Defend" }
+        };
+
         public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!givexp" };
     }
 }
