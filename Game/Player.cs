@@ -11,15 +11,18 @@ namespace cs2_rpg.Game
     class Player
     {
         public string username;
+        public PlayerState playerState;
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
         public int xp = 0;
-        public Action<int> optionCallback;
-        private int[] optionsIDs;
+        public Action<int>? optionCallback;
+        private int[] optionsIDs = { };
 
         public Player(string username)
         {
             this.username = username;
+            this.playerState = PlayerState.Free;
+           
         }
 
         private Random random = new Random();

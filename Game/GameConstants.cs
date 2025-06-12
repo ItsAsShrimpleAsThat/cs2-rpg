@@ -18,6 +18,15 @@ namespace cs2_rpg.Game
             { Destination.Lake , "Lake" }
         };
 
+        public static Dictionary<PlayerState, string> pstate2Name = new Dictionary<PlayerState, string>()
+        {
+            { PlayerState.Free , "Free" },
+            { PlayerState.Exploring , "Exploring" },
+            { PlayerState.InBattle , "In a battle" },
+            { PlayerState.InShop , "In a shop" },
+            { PlayerState.Dead , "Dead" },
+        };
+
         public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!givexp" };
     }
 }

@@ -35,9 +35,17 @@ namespace cs2_rpg.Game
                                     break;
 
                                 case "!explore":
-                                    Destination[] destinations = player.GetExplorationOptions();
-                                    ChatSender.SendChatMessage(responsePrefix + "Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, GameConstants.dest2Name));
-                                    player.optionCallback = player.Explore;
+                                    if (player.playerState == PlayerState.Free)
+                                    {
+                                        player.playerState = PlayerState.Exploring;
+                                        Destination[] destinations = player.GetExplorationOptions();
+                                        ChatSender.SendChatMessage(responsePrefix + "Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, GameConstants.dest2Name));
+                                        player.optionCallback = player.Explore;
+                                    }
+                                    else
+                                    {
+                                        ChatSender.SendChatMessage(responsePrefix + "You cannot start an exploration while you are currently " + GameConstants.pstate2Name[player.playerState].ToLower() + "!");
+                                    }
                                     break;
 
                                 case "!givexp":

@@ -8,7 +8,7 @@ namespace cs2_rpg.Game
 {
     public enum PlayerState
     {
-        Starting,
+        Free,
         Exploring,
         InBattle,
         InShop,
