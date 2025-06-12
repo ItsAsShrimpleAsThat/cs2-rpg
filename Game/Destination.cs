@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    public enum Destination
+    public enum Destination : int
     {
-        Forest,
-        Desert,
-        Grassland,
-        Mountain,
-        Lake
+        Forest = 0,
+        Desert = 1,
+        Grassland = 2,
+        Mountain = 3,
+        Lake = 4
     }
 }

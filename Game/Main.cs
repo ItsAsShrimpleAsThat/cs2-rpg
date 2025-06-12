@@ -37,6 +37,7 @@ namespace cs2_rpg.Game
                                 case "!explore":
                                     Destination[] destinations = player.GetExplorationOptions();
                                     ChatSender.SendChatMessage(responsePrefix + "Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, GameConstants.dest2Name));
+                                    player.optionCallback = player.Explore;
                                     break;
 
                                 case "!givexp":
@@ -51,7 +52,7 @@ namespace cs2_rpg.Game
                                         int pickedOption = -1;
                                         if (int.TryParse(splittedMsg[1], out pickedOption))
                                         {
-                                            if (pickedOption > 0 && pickedOption < player.maxAwaitingOption)
+                                            if (pickedOption > 0 && pickedOption < player.maxAwaitingOption + 1)
                                             {
                                                 if(player.optionCallback != null)
                                                 {

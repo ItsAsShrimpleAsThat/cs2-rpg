@@ -51,7 +51,7 @@ namespace cs2_rpg.csinterop
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine("Error in parsing chat message: " + ex.Message);
+                                Console.WriteLine("Error in parsing chat message: " + ex);
                                 Console.WriteLine("Raw Console line is:");
                                 Console.WriteLine(line);
                             }
