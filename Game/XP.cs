@@ -12,5 +12,15 @@ namespace cs2_rpg.Game
         {
             return (int)Math.Floor(0.4 * Math.Sqrt(xp));
         }
+
+        public static int XPtoHP(int xp)
+        {
+            return GameConstants.baseHealth + (int)(0.2 * xp);
+        }
+
+        public static int XPtoDefense(int xp)
+        {
+            return GameConstants.baseDefense + (int)(0.05 * xp);
+        }
     }
 }

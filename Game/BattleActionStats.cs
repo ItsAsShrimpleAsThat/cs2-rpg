@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    internal abstract class BattleAction
+    internal struct BattleActionStats
     {
-        public abstract void Act();
+        public int xp;
     }
 }

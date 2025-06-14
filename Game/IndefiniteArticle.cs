@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    internal abstract class BattleAction
+    public enum IndefiniteArticle
     {
-        public abstract void Act();
+        a,
+        an
     }
 }

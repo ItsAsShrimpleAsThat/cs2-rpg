@@ -11,6 +11,7 @@ namespace cs2_rpg.Game
         Earth,
         Fire,
         Poison,
-        Water
+        Water,
+        Neutral
     }
 }

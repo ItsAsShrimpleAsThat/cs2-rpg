@@ -29,10 +29,12 @@ namespace cs2_rpg.Game
                             // Player has joined playing right now so process their command
                             switch (splittedMsg[0].ToLower())
                             {
+                                // ========== Start Game ========== \\
                                 case "!rpg":
                                     ChatSender.SendChatMessage("You have already joined CS2 RPG. Type !help for a list of commands", player.username);
                                     break;
 
+                                // ==========   Explore   ========== \\
                                 case "!explore":
                                     if (player.playerState == PlayerState.Free)
                                     {
@@ -61,13 +63,12 @@ namespace cs2_rpg.Game
                                         {
                                             if (pickedOption > 0 && pickedOption < player.maxAwaitingOption + 1)
                                             {
-                                                if(player.optionCallback != null)
+                                                player.StopAwaitingOptions();
+
+                                                if (player.optionCallback != null)
                                                 {
-                                                    player.optionCallback(pickedOption);
+                                                    player.optionCallback(pickedOption - 1  );
                                                 }
-                                                
-                                                player.isAwaitingOption = false;
-                                                player.maxAwaitingOption = -1;
                                             }
                                             else
                                             {

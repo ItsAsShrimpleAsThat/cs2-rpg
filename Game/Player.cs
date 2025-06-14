@@ -20,7 +20,8 @@ namespace cs2_rpg.Game
         public int defense = GameConstants.baseDefense;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
-        private BattleAction[] battleActions = new BattleAction[5] { BattleAction.Strike, BattleAction.Focus, BattleAction.Sting, BattleAction.Defend, BattleAction.UseItem };
+        private BattleActions[] battleActions = new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem };
+        private Enemy? currentEnemy;
 
         public Player(string username)
         {
@@ -32,14 +33,15 @@ namespace cs2_rpg.Game
 
         public void Explore(int option)
         {
-            int pickedDestID = optionsIDs[option - 1];
+            int pickedDestID = optionsIDs[option];
             Destination pickedDestination = (Destination)pickedDestID;
             string destName = GameConstants.dest2Name[pickedDestination];
 
             if (random.Next(0, 2) == 0)
             {
-                ChatSender.SendChatMessage("You explored the " + destName + " and encountered a(/n) enemy!", username);
-                StartBattle(MakeEnemy(pickedDestination));
+                Enemy enemy = MakeEnemy(pickedDestination);
+                ChatSender.SendChatMessage("You explored the " + destName + " and encountered " + enemy.WithIndefiniteArticle() + "!", username);
+                StartBattle(enemy);
             }
             else
             {
@@ -50,12 +52,78 @@ namespace cs2_rpg.Game
 
         public Destination[] GetExplorationOptions()
         {
-            isAwaitingOption = true;
             Destination[] destinations = PickNRandomElementsFromArray<Destination>(GameConstants.allDestinations, 3);
-            maxAwaitingOption = destinations.Length;
+            StartAwaitingOptions(destinations);
             optionsIDs = destinations.Select(d=>(int)d).ToArray();
 
             return destinations;
+        }
+
+        public void DoBattleOption(int option)
+        {
+            BattleActions action = battleActions[option];
+
+            if (currentEnemy != null) // To make the warnings go away
+            {
+                if ((int)action == 0)                                    // Use Item action id
+                {
+                    ChatSender.SendChatMessage("What item would you like to use? Just kidding bitch, I haven't implemented this", username);
+                }
+                else if ((int)action >= 1 && (int)action <= 999)         // Attack action id range
+                {
+                    Attack attack = GameConstants.battleAction2Attack[action];
+
+                    if (attack != null)
+                    {
+                        // THIS IS NOT DONE, BUT I WANNA GO TO SLEEP SO THIS IS WHAT WE'RE LEAVING IT AT TONIGHT
+                        (int dmgDealt, int newDefense) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
+                        currentEnemy.health -= dmgDealt;
+                        currentEnemy.defense = newDefense;
+                        ChatSender.SendChatMessage("New enemy stats: hp: " + currentEnemy.health.ToString() + " defenese: " + currentEnemy.defense.ToString());
+                    }
+                }
+                else if ((int)action >= 1000 && (int)action <= 1999)    // Self buff action id range
+                {
+
+                }
+                else if ((int)action >= 2000 && (int)action <= 2999)    // Status effect action id range
+                {
+
+                }
+                else if ((int)action >= 3000 && (int)action <= 3999)    // Defend action id range
+                {
+
+                }
+            }
+        }
+
+        public void EnemyAttacksPlayer()
+        {
+
+        }
+
+        public void DoAttack(Attack attack)
+        {
+
+        }
+
+        public void StartPlayersTurn()
+        {
+            ChatSender.SendChatMessage("It's your turn. What would you like to do? Respond with !option #. " + PresentAsOptions<BattleActions>(battleActions, GameConstants.battleAction2Name), username);
+            StartAwaitingOptions(battleActions);
+            optionCallback = DoBattleOption;
+        }
+
+        public void StartAwaitingOptions<T>(T[] options)
+        {
+            isAwaitingOption = true;
+            maxAwaitingOption = options.Length;
+        }
+
+        public void StopAwaitingOptions()
+        {
+            isAwaitingOption = false;
+            maxAwaitingOption = -1;
         }
 
         public string PresentAsOptions<T>(T[] options, Dictionary<T, string> nameLookup)
@@ -73,13 +141,17 @@ namespace cs2_rpg.Game
         {
             ChatSender.SendChatMessage(GetBattleVs(enemy), username);
             playerState = PlayerState.InBattle;
+            currentEnemy = enemy;
 
-            if (random.Next(0, 2) == 0)
+            //if (random.Next(0, 2) == 0)
+            //TODO: remove this
+            if (random.Next(0, 1) == 0)
             {
-                ChatSender.SendChatMessage("It's your turn. What would you like to do? Respond with !option #. " + PresentAsOptions<BattleAction>(battleActions, GameConstants.battleAction2Name), username);
+                StartPlayersTurn();
             }
             else
             {
+                // move to start enemy's turn method
                 ChatSender.SendChatMessage("It's the enemy's turn. They did something, i don't know what they did yet because I haven't implemented this yet", username);
             }
         }
@@ -90,9 +162,9 @@ namespace cs2_rpg.Game
             EnemyPrefab prefab = Enemies.GetRandomPrefabFromType(enemyType);
 
             int enemyXP = Enemies.PlayerXPtoEnemyXP(xp);
-            int enemyHP = (int)(Enemies.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
-            int enemyDefense = (int)(Enemies.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
-            return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP);
+            int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
+            int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
+            return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle);
         }
         
         public void MyTurn(Enemy enemy)
@@ -107,7 +179,7 @@ namespace cs2_rpg.Game
 
         private string GetBattleVs(Enemy enemy)
         {
-            return enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + ", health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + ", type: " + enemy.type + "] ===vs=== " + username + " [ lvl: " + XP.XPToLevel(xp) + ", health: " + health.ToString() + "/" + maxHP.ToString() + "]";
+            return enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + ", health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + ", type: " + enemy.type + "] ---ＶＳ--- " + username + " [ lvl: " + XP.XPToLevel(xp) + ", health: " + health.ToString() + "/" + maxHP.ToString() + "]";
         }
 
         public T[] PickNRandomElementsFromArray<T>(T[] source, int num)

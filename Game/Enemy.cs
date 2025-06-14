@@ -14,8 +14,9 @@ namespace cs2_rpg.Game
         public int maxHP;
         public int defense;
         public int xp;
+        public IndefiniteArticle indefiniteArticle;
 
-        public Enemy(string name, Type type, int health, int maxHP, int defense, int xp)
+        public Enemy(string name, Type type, int health, int maxHP, int defense, int xp, IndefiniteArticle indefiniteArticle)
         {
             this.name = name;
             this.type = type;
@@ -23,6 +24,12 @@ namespace cs2_rpg.Game
             this.maxHP = maxHP;
             this.defense = defense;
             this.xp = xp;
+            this.indefiniteArticle = indefiniteArticle;
+        }
+
+        public string WithIndefiniteArticle()
+        {
+            return indefiniteArticle.ToString() + " " + name;
         }
     }
 }
