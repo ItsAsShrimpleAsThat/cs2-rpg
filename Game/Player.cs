@@ -1,6 +1,7 @@
 ﻿using CounterStrike2GSI.Nodes;
 using cs2_rpg.csinterop;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,10 @@ namespace cs2_rpg.Game
         {
             this.username = username;
             this.playerState = PlayerState.Free;
+
+            this.maxHP = (int)(XP.XPtoHP(xp));
+            this.health = this.maxHP;
+            this.defense = (int)(XP.XPtoDefense(xp));
         }
 
         private Random random = new Random();
@@ -65,41 +70,55 @@ namespace cs2_rpg.Game
 
             if (currentEnemy != null) // To make the warnings go away
             {
-                if ((int)action == 0)                                    // Use Item action id
+                BattleActionType? type = BattleAction.GetBattleActionType(action);
+
+                if (type == BattleActionType.UseItem)
                 {
                     ChatSender.SendChatMessage("What item would you like to use? Just kidding bitch, I haven't implemented this", username);
                 }
-                else if ((int)action >= 1 && (int)action <= 999)         // Attack action id range
+                else if (type == BattleActionType.Attack)
                 {
                     Attack attack = GameConstants.battleAction2Attack[action];
 
                     if (attack != null)
                     {
+                        Console.WriteLine("\nPLAYER ATTACKING. XP = " + xp);
                         // THIS IS NOT DONE, BUT I WANNA GO TO SLEEP SO THIS IS WHAT WE'RE LEAVING IT AT TONIGHT
                         (int dmgDealt, int newDefense) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
                         currentEnemy.health -= dmgDealt;
                         currentEnemy.defense = newDefense;
                         ChatSender.SendChatMessage("New enemy stats: hp: " + currentEnemy.health.ToString() + " defenese: " + currentEnemy.defense.ToString());
+
+                        EnemysMove();
                     }
                 }
-                else if ((int)action >= 1000 && (int)action <= 1999)    // Self buff action id range
+                else if (type == BattleActionType.SelfBuff)
+                {
+                    
+                }
+                else if (type == BattleActionType.StatusEffect)
                 {
 
                 }
-                else if ((int)action >= 2000 && (int)action <= 2999)    // Status effect action id range
-                {
-
-                }
-                else if ((int)action >= 3000 && (int)action <= 3999)    // Defend action id range
+                else if (type == BattleActionType.Defend)
                 {
 
                 }
             }
         }
 
-        public void EnemyAttacksPlayer()
+        public void EnemysMove()
         {
+            Console.WriteLine("\nENEMY ATTACKING. XP = " + currentEnemy.xp + " PLAYERS DEFENSE = " + defense);
+            Attack chosenAttack = currentEnemy.GetRandomAttack(0.0);
 
+            (int dmgDealt, int newDefense) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral);
+            health -= dmgDealt;
+            defense = newDefense;
+
+            ChatSender.SendChatMessage("New Player stats: hp: " + health.ToString() + " defenese: " + defense.ToString());
+
+            StartPlayersTurn();
         }
 
         public void DoAttack(Attack attack)
@@ -164,7 +183,7 @@ namespace cs2_rpg.Game
             int enemyXP = Enemies.PlayerXPtoEnemyXP(xp);
             int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
             int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
-            return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle);
+            return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle, prefab.battleActions);
         }
         
         public void MyTurn(Enemy enemy)

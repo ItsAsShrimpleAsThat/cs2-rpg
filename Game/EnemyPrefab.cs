@@ -13,14 +13,16 @@ namespace cs2_rpg.Game
         public double hpVariance;
         public double defenseVariance;
         public IndefiniteArticle indefiniteArticle;
+        public BattleActions[] battleActions;
 
-        public EnemyPrefab(string name, Type type,  double hpVariance, double defenseVariance, IndefiniteArticle indefiniteArticle)
+        public EnemyPrefab(string name, Type type,  double hpVariance, double defenseVariance, IndefiniteArticle indefiniteArticle, BattleActions[] battleActions)
         {
             this.name = name;
             this.type = type;
             this.hpVariance = hpVariance;
             this.defenseVariance = defenseVariance;
             this.indefiniteArticle = indefiniteArticle;
+            this.battleActions = battleActions;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    internal enum BattleActions : int
+    public enum BattleActions : int
     {
         UseItem = 0,
 

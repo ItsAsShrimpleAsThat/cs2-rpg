@@ -10,28 +10,28 @@ namespace cs2_rpg.Game
     internal static class Enemies
     {
         private static Random rand = new Random();
-        public static EnemyPrefab[] earthEnemies = 
+        public static EnemyPrefab[] earthEnemies =
         {
-            new EnemyPrefab("Stoneback", Type.Earth, 0.0, 0.0, IndefiniteArticle.a),
-            new EnemyPrefab("Dustcaller", Type.Earth, 0.1, 0.2, IndefiniteArticle.a)
+            new EnemyPrefab("Stoneback", Type.Earth, 0.0, 0.0, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike }),
+            new EnemyPrefab("Dustcaller", Type.Earth, 0.1, 0.2, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike })
         };
 
         public static EnemyPrefab[] fireEnemies =
         {
-            new EnemyPrefab("Blazehound", Type.Fire, 0.0, 0.0, IndefiniteArticle.a),
-            new EnemyPrefab("Kindlekin", Type.Fire, 0.15, 0.1, IndefiniteArticle.a)
+            new EnemyPrefab("Blazehound", Type.Fire, 0.0, 0.0, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike }),
+            new EnemyPrefab("Kindlekin", Type.Fire, 0.15, 0.1, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike })
         };
 
         public static EnemyPrefab[] poisonEnemies =
         {
-            new EnemyPrefab("Dartite", Type.Poison, 0.0, 0.0, IndefiniteArticle.a),
-            new EnemyPrefab("Blightling", Type.Poison, 0.12, 0.12, IndefiniteArticle.a)
+            new EnemyPrefab("Dartite", Type.Poison, 0.0, 0.0, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike }),
+            new EnemyPrefab("Blightling", Type.Poison, 0.12, 0.12, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike })
         };
 
         public static EnemyPrefab[] waterEnemies =
         {
-            new EnemyPrefab("Coralhyde", Type.Water, 0.0, 0.0, IndefiniteArticle.a),
-            new EnemyPrefab("Shrimpene", Type.Water, 0.1, 0.2, IndefiniteArticle.a)
+            new EnemyPrefab("Coralhyde", Type.Water, 0.0, 0.0, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike }),
+            new EnemyPrefab("Shrimpene", Type.Water, 0.1, 0.2, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike })
         };
 
         public static EnemyPrefab[] GetPrefabsFromType(Type type)
@@ -55,7 +55,7 @@ namespace cs2_rpg.Game
 
         public static int PlayerXPtoEnemyXP(int playerXP)
         {
-            return (int)(playerXP * (0.95 + rand.NextDouble() * 0.1)) + 5;
+            return (int)(playerXP * ((((rand.NextDouble() * 2) - 1.0) * 0.1) + 1.0 - 0.1));
         }
     }
 }
