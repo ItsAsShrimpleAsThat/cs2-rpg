@@ -13,14 +13,14 @@ namespace cs2_rpg.csinterop
 
         public static void SendChatMessage(string message)
         {
-            messageQueue.Enqueue(new EnqueuedMessage("[ＣＳ２ ＲＰＧ] " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+            messageQueue.Enqueue(new EnqueuedMessage("[𝙲𝚂𝟸 𝚁𝙿𝙶] " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
 
             Console.WriteLine("Enqueueing Message: " + message);
         }
 
         public static void SendChatMessage(string message, string recipient)
         {
-            messageQueue.Enqueue(new EnqueuedMessage("[ＣＳ２ ＲＰＧ] " + "@" + recipient + " " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+            messageQueue.Enqueue(new EnqueuedMessage("[𝙲𝚂𝟸 𝚁𝙿𝙶] " + "@" + recipient + " " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
 
             Console.WriteLine("Enqueueing Message to " + recipient + ": " + message);
         }

@@ -159,7 +159,7 @@ namespace cs2_rpg.Game
         public void StartPlayersTurn()
         {
             ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
-            ChatSender.SendChatMessage("It's your turn. What would you like to do? Respond with !option #. " + PresentAsOptions<BattleActions>(battleActions, GameConstants.battleAction2Name), username);
+            ChatSender.SendChatMessage("It's your turn. " + PresentAsOptions<BattleActions>(battleActions, GameConstants.battleAction2Name), username);
             StartAwaitingOptions(battleActions);
             optionCallback = DoBattleOption;
         }
@@ -228,7 +228,7 @@ namespace cs2_rpg.Game
 
         private string GetBattleVs(Enemy enemy)
         {
-            return enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + ", health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + ", type: " + enemy.type + "] ---ＶＳ--- " + username + " [ lvl: " + XP.XPToLevel(xp) + ", health: " + health.ToString() + "/" + maxHP.ToString() + "]";
+            return enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + " | health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + " | type: " + enemy.type + "] ---ＶＳ--- " + username + " [ lvl: " + XP.XPToLevel(xp) + " | health: " + health.ToString() + "/" + maxHP.ToString() + "]";
         }
 
         public T[] PickNRandomElementsFromArray<T>(T[] source, int num)
