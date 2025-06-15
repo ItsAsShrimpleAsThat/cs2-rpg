@@ -62,5 +62,11 @@ namespace cs2_rpg.Game
         public static readonly double attackAffinityModifier = 0.75;
         public static readonly double attackEffectiveModifier = 1.5;
         public static readonly double defenseAbsorption = 0.8;
+        public static readonly double moneyWinScale = 0.5;
+        public static readonly double baseMoneyReward = 5;
+        public static readonly double moneyRewardVariance = 0.25;
+        public static readonly double xpWinScale = 0.75;
+        public static readonly double baseXPReward = 7;
+        public static readonly double xpRewardVariance = 0.25;
     }
 }

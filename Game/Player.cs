@@ -16,6 +16,7 @@ namespace cs2_rpg.Game
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
         public int xp = 5;
+        public int money = 5;
         public int health = GameConstants.baseHealth;
         public int maxHP = GameConstants.baseHealth;
         public int defense = GameConstants.baseDefense;
@@ -87,6 +88,12 @@ namespace cs2_rpg.Game
                         (int dmgDealt, int newDefense) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
                         currentEnemy.health -= dmgDealt;
                         currentEnemy.defense = newDefense;
+
+                        if(currentEnemy.health < 0)
+                        {
+                            WonBattle();
+                        }
+
                         ChatSender.SendChatMessage("New enemy stats: hp: " + currentEnemy.health.ToString() + " defenese: " + currentEnemy.defense.ToString());
 
                         EnemysMove();
@@ -120,10 +127,21 @@ namespace cs2_rpg.Game
 
             StartPlayersTurn();
         }
-
-        public void DoAttack(Attack attack)
+        
+        public void WonBattle()
         {
+            if (currentEnemy != null)
+            {
+                int moneyEarned = (int)((currentEnemy.xp * GameConstants.moneyWinScale + GameConstants.baseMoneyReward) * ((((random.NextDouble() * 2.0) - 1.0) * GameConstants.moneyRewardVariance) + 1.0));
+                int xpEarned = (int)((currentEnemy.xp * GameConstants.xpWinScale + GameConstants.baseXPReward) * ((((random.NextDouble() * 2.0) - 1.0) * GameConstants.xpRewardVariance) + 1.0));
+                ChatSender.SendChatMessage("You successfully defeated the " + currentEnemy.name + "! " + " You earned $" + moneyEarned.ToString() + " and gained " + xpEarned + " xp!", username);
 
+                money += moneyEarned;
+                xp += xpEarned;
+
+                currentEnemy = null;
+                playerState = PlayerState.Free;
+            }
         }
 
         public void StartPlayersTurn()
