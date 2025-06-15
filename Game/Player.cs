@@ -83,18 +83,17 @@ namespace cs2_rpg.Game
 
                     if (attack != null)
                     {
-                        Console.WriteLine("\nPLAYER ATTACKING. XP = " + xp);
                         // THIS IS NOT DONE, BUT I WANNA GO TO SLEEP SO THIS IS WHAT WE'RE LEAVING IT AT TONIGHT
-                        (int dmgDealt, int newDefense) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
+                        (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type, 1.0/24);
                         currentEnemy.health -= dmgDealt;
                         currentEnemy.defense = newDefense;
 
-                        if(currentEnemy.health < 0)
+                        ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + currentEnemy.health + "/" + currentEnemy.maxHP + " HP and " + currentEnemy.defense + " defense.", username);
+
+                        if(currentEnemy.health <= 0)
                         {
                             WonBattle();
                         }
-
-                        ChatSender.SendChatMessage("New enemy stats: hp: " + currentEnemy.health.ToString() + " defenese: " + currentEnemy.defense.ToString());
 
                         EnemysMove();
                     }
@@ -116,14 +115,14 @@ namespace cs2_rpg.Game
 
         public void EnemysMove()
         {
-            Console.WriteLine("\nENEMY ATTACKING. XP = " + currentEnemy.xp + " PLAYERS DEFENSE = " + defense);
             Attack chosenAttack = currentEnemy.GetRandomAttack(0.0);
 
-            (int dmgDealt, int newDefense) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral);
+            (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral, 1.0/24);
+
             health -= dmgDealt;
             defense = newDefense;
 
-            ChatSender.SendChatMessage("New Player stats: hp: " + health.ToString() + " defenese: " + defense.ToString());
+            ChatSender.SendChatMessage("Enemy used " + chosenAttack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ You are now at " + health + "/" + maxHP + " HP and " + defense + " defense.", username);
 
             StartPlayersTurn();
         }
@@ -159,6 +158,7 @@ namespace cs2_rpg.Game
 
         public void StartPlayersTurn()
         {
+            ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
             ChatSender.SendChatMessage("It's your turn. What would you like to do? Respond with !option #. " + PresentAsOptions<BattleActions>(battleActions, GameConstants.battleAction2Name), username);
             StartAwaitingOptions(battleActions);
             optionCallback = DoBattleOption;
@@ -189,7 +189,6 @@ namespace cs2_rpg.Game
 
         public void StartBattle(Enemy enemy)
         {
-            ChatSender.SendChatMessage(GetBattleVs(enemy), username);
             playerState = PlayerState.InBattle;
             currentEnemy = enemy;
 

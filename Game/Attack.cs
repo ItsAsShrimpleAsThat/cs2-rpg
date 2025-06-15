@@ -8,34 +8,55 @@ namespace cs2_rpg.Game
 {
     internal class Attack
     {
+        public string name;
         public int baseDamage;
         public double dmgVariance;
         public Type effectiveType; // More effect against this type
         public Type resonantType; // Less effective against this type
 
 
-        public Attack(int baseDamage, double dmgVariance, Type effectiveType, Type resonantType)
+        public Attack(int baseDamage, double dmgVariance, Type effectiveType, Type resonantType, string name)
         {
             this.baseDamage = baseDamage;
             this.dmgVariance = dmgVariance;
             this.effectiveType = effectiveType;
             this.resonantType = resonantType;
+            this.name = name;
         }
 
-        public (int damageDealt, int opponentDefense) CalculateDamageAndNewDefense(int attackerXP, int opponenetDefense, Type opponentType)
+        public AttackEffectiveness AddCrit(AttackEffectiveness noCrit)
         {
+            if (noCrit == AttackEffectiveness.EffectiveTypeMatch) return AttackEffectiveness.EffectiveTypeMatchCrit;
+            else if (noCrit == AttackEffectiveness.NotEffectiveTypeMatch) return AttackEffectiveness.EffectiveNonTypeMatchCrit;
+            else return AttackEffectiveness.EffectiveCrit;
+        }
+
+        public (int damageDealt, int opponentDefense, AttackEffectiveness effectiveness) CalculateDamageAndNewDefense(int attackerXP, int opponenetDefense, Type opponentType, double critChance)
+        {
+            Random rand = new Random();
+            AttackEffectiveness effectiveness = AttackEffectiveness.Effective;
+
             double scaledDmg = baseDamage + attackerXP * GameConstants.attackDmgXPScale;
             if (effectiveType == opponentType && effectiveType != Type.Neutral)
             {
+                effectiveness = AttackEffectiveness.EffectiveTypeMatch;
                 scaledDmg *= GameConstants.attackEffectiveModifier;
             }
             if (resonantType == opponentType && resonantType != Type.Neutral)
             {
+                effectiveness = AttackEffectiveness.NotEffectiveTypeMatch;
                 scaledDmg *= GameConstants.attackAffinityModifier;
             }
 
             // randomize dmg a bit
-            scaledDmg *= (1.0 + ((new Random().NextDouble() * 2) - 1.0) * dmgVariance);
+            scaledDmg *= (1.0 + ((rand.NextDouble() * 2) - 1.0) * dmgVariance);
+
+            // Crits because i guess rpgs have to do that
+            if(rand.NextDouble() <= critChance)
+            {
+                scaledDmg *= 1.5;
+                effectiveness = AddCrit(effectiveness);
+            }
 
             // Half life's armor system
             double desiredAbsorption = scaledDmg * GameConstants.defenseAbsorption;
@@ -47,7 +68,7 @@ namespace cs2_rpg.Game
 
             Console.WriteLine("Dmg dealt float: " + (scaledDmg - actualAbsorption).ToString() + " dmg absorbed by armor: " + actualAbsorption.ToString());
 
-            return (damageDealt: finalDmg, opponentDefense: opponenetDefense);
+            return (damageDealt: finalDmg, opponentDefense: opponenetDefense, effectiveness: effectiveness);
         }
     }
 }

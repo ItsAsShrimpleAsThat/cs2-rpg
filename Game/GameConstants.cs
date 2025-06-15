@@ -53,7 +53,17 @@ namespace cs2_rpg.Game
 
         public static Dictionary<BattleActions, Attack> battleAction2Attack = new Dictionary<BattleActions, Attack>()
         {
-            { BattleActions.Strike , new Attack(10, 0.1, Type.Neutral, Type.Neutral) },
+            { BattleActions.Strike , new Attack(10, 0.1, Type.Neutral, Type.Neutral, "Strike") },
+        };
+
+        public static Dictionary<AttackEffectiveness, string> attackEffectivenessDialogue = new Dictionary<AttackEffectiveness, string>()
+        {
+            { AttackEffectiveness.Effective , "It was effective!"},
+            { AttackEffectiveness.EffectiveTypeMatch , "It was super effective! (Type match)"},
+            { AttackEffectiveness.NotEffectiveTypeMatch , "It was not effective! (Type mismatch)"},
+            { AttackEffectiveness.EffectiveCrit , "It was super effective! (Critical hit!)"},
+            { AttackEffectiveness.EffectiveTypeMatchCrit , "It was super duper effective! (Crit and Type match!)"},
+            { AttackEffectiveness.EffectiveNonTypeMatchCrit , "It was effective! (Critical, but Type mismatch)"}
         };
 
         public static readonly int baseHealth = 30;
