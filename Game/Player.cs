@@ -136,8 +136,21 @@ namespace cs2_rpg.Game
                 int xpEarned = (int)((currentEnemy.xp * GameConstants.xpWinScale + GameConstants.baseXPReward) * ((((random.NextDouble() * 2.0) - 1.0) * GameConstants.xpRewardVariance) + 1.0));
                 ChatSender.SendChatMessage("You successfully defeated the " + currentEnemy.name + "! " + " You earned $" + moneyEarned.ToString() + " and gained " + xpEarned + " xp!", username);
 
+                int oldXP = xp;
+
                 money += moneyEarned;
                 xp += xpEarned;
+
+                int oldMaxHP = maxHP;
+                maxHP = XP.XPtoHP(xp);
+                health += maxHP - oldMaxHP; // Heal player by the amount of HP they gained
+
+                int preRewardHeal = health;
+                health += maxHP >> 1; // Heal 50%;
+
+                health = Math.Min(health, maxHP); // make sure hp doesnt go over maxhp
+
+                ChatSender.SendChatMessage("Your stats improved! XP: " + oldXP + "→" + xp + ", Max Health: " + oldMaxHP + "→" + maxHP + ", and you regenerated " + (health - preRewardHeal) + " HP! You are currently at " + health + "/" + maxHP + " HP and " + defense + " defense!", username);
 
                 currentEnemy = null;
                 playerState = PlayerState.Free;
