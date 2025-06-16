@@ -37,7 +37,7 @@ namespace cs2_rpg.Game
             { BattleActions.Defend , "Defend" }
         };
 
-        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!givexp" };
+        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!opt", "!givexp" };
 
         public static Dictionary<Destination, Type[]> typesInDests = new Dictionary<Destination, Type[]>()
         {

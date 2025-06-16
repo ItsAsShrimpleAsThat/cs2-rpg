@@ -15,14 +15,14 @@ namespace cs2_rpg.csinterop
         {
             messageQueue.Enqueue(new EnqueuedMessage("[𝙲𝚂𝟸 𝚁𝙿𝙶] " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
 
-            Console.WriteLine("Enqueueing Message: " + message);
+            Console.WriteLine("Enqueueing Message of length " + message.Length + ": " + message);
         }
 
         public static void SendChatMessage(string message, string recipient)
         {
             messageQueue.Enqueue(new EnqueuedMessage("[𝙲𝚂𝟸 𝚁𝙿𝙶] " + "@" + recipient + " " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
 
-            Console.WriteLine("Enqueueing Message to " + recipient + ": " + message);
+            Console.WriteLine("Enqueueing Message to " + recipient + " of length " + message.Length + ": " + message);
         }
 
 
@@ -67,10 +67,17 @@ namespace cs2_rpg.csinterop
 
         public static void CheckIfMessageSent(string recievedMessage)
         {
-            if(recievedMessage == awaitingMessage)
+            if (awaitingMessage != null)
             {
-                awaitingMessage = null;
-                CFG.ClearMessage();
+                if (awaitingMessage.Length > 229)
+                {
+                    awaitingMessage = awaitingMessage.Substring(0, 229);
+                }
+                if (recievedMessage == awaitingMessage)
+                {
+                    awaitingMessage = null;
+                    CFG.ClearMessage();
+                }
             }
         }
     }

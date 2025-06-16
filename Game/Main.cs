@@ -55,7 +55,8 @@ namespace cs2_rpg.Game
                                     ChatSender.SendChatMessage( "Your XP is " + player.xp, player.username);
                                     break;
 
-                                case "!option":
+                                case "!option": 
+                                case "!opt":
                                     if (player.isAwaitingOption)
                                     {
                                         int pickedOption = -1;
@@ -67,7 +68,7 @@ namespace cs2_rpg.Game
 
                                                 if (player.optionCallback != null)
                                                 {
-                                                    player.optionCallback(pickedOption - 1  );
+                                                    player.optionCallback(pickedOption - 1);
                                                 }
                                             }
                                             else
@@ -84,6 +85,10 @@ namespace cs2_rpg.Game
                                     {
                                         ChatSender.SendChatMessage("You haven't been asked to choose an option.", player.username);
                                     }
+                                    break;
+                                case "!help":
+                                    ChatSender.SendChatMessage("Here are all commands in CS2 RPG. !rpg - join the rpg (you've already done this!) | !help - this command | !explore - begin an exploration to find an item or fight an enemy");
+                                    ChatSender.SendChatMessage("!option [#] or !opt [#] - select an option if you've been prompted to");
                                     break;
                             }
                         }

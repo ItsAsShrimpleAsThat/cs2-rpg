@@ -153,6 +153,7 @@ namespace cs2_rpg.Game
 
                 currentEnemy = null;
                 playerState = PlayerState.Free;
+                StopAwaitingOptions();
             }
         }
 

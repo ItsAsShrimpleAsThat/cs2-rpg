@@ -24,6 +24,6 @@ namespace cs2_rpg
         public static readonly string loopStartExecName = "startbot";
         public static readonly string asyncStarterFile = "loopasyncstarterDONOTRUN";
 
-        public static readonly long sendMessageTimeoutMs = 3000;
+        public static readonly long sendMessageTimeoutMs = 5000;
     }
 }
