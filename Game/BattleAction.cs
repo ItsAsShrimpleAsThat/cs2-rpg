@@ -33,5 +33,18 @@ namespace cs2_rpg.Game
             }
             return null;
         }
+
+        public static string BattleActionToName(BattleActions state)
+        {
+            return state switch
+            {
+                BattleActions.UseItem => "Use Item",
+                BattleActions.Strike => "Strike",
+                BattleActions.Focus => "Focus",
+                BattleActions.Sting => "Sting",
+                BattleActions.Defend => "Defend",
+                 _ => throw new NotImplementedException()
+            };
+        }
     }
 }

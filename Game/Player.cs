@@ -42,7 +42,7 @@ namespace cs2_rpg.Game
         {
             int pickedDestID = optionsIDs[option];
             Destination pickedDestination = (Destination)pickedDestID;
-            string destName = GameConstants.dest2Name[pickedDestination];
+            string destName = Destinations.DestinationToName(pickedDestination);
 
             if (random.Next(0, 2) == 0)
             {
@@ -161,7 +161,7 @@ namespace cs2_rpg.Game
         public void StartPlayersTurn()
         {
             ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
-            ChatSender.SendChatMessage("It's your turn. " + PresentAsOptions<BattleActions>(battleActions, GameConstants.battleAction2Name), username);
+            ChatSender.SendChatMessage("It's your turn. " + PresentAsOptions<BattleActions>(battleActions, BattleAction.BattleActionToName), username);
             StartAwaitingOptions(battleActions);
             optionCallback = DoBattleOption;
         }
@@ -189,6 +189,17 @@ namespace cs2_rpg.Game
             return optionsString;
         }
 
+        public string PresentAsOptions<T>(T[] options, Func<T, string> nameLookup)
+        {
+            string optionsString = "";
+            for (int i = 0; i < options.Length; i++)
+            {
+                optionsString += "[" + (i + 1) + "]" + " " + nameLookup(options[i]) + (i == options.Length - 1 ? "" : ", ");
+            }
+
+            return optionsString;
+        }
+
         public void StartBattle(Enemy enemy)
         {
             playerState = PlayerState.InBattle;
@@ -209,7 +220,7 @@ namespace cs2_rpg.Game
 
         private Enemy MakeEnemy(Destination dest)
         {
-            Type enemyType = GameConstants.typesInDests[dest][random.Next(0, 2)];
+            Type enemyType = Types.TypesInDests(dest)[random.Next(0, 2)];
             EnemyPrefab prefab = Enemies.GetRandomPrefabFromType(enemyType);
 
             int enemyXP = Enemies.PlayerXPtoEnemyXP(xp);

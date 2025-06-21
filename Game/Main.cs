@@ -40,12 +40,12 @@ namespace cs2_rpg.Game
                                     {
                                         player.playerState = PlayerState.Exploring;
                                         Destination[] destinations = player.GetExplorationOptions();
-                                        ChatSender.SendChatMessage("Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, GameConstants.dest2Name), player.username);
+                                        ChatSender.SendChatMessage("Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, Destinations.DestinationToName), player.username);
                                         player.optionCallback = player.Explore;
                                     }
                                     else
                                     {
-                                        ChatSender.SendChatMessage("You cannot start an exploration while you are currently " + GameConstants.pstate2Name[player.playerState].ToLower() + "!", player.username);
+                                        ChatSender.SendChatMessage("You cannot start an exploration while you are currently " + PlayerStates.PlayerStateToName(player.playerState).ToLower() + "!", player.username);
                                     }
                                     break;
 

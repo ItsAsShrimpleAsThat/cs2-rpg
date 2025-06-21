@@ -14,4 +14,20 @@ namespace cs2_rpg.Game
         InShop,
         Dead
     }
+
+    public static class PlayerStates
+    {
+        public static string PlayerStateToName(PlayerState state)
+        {
+            return state switch
+            {
+                PlayerState.Free => "Free",
+                PlayerState.Exploring => "Exploring",
+                PlayerState.InBattle => "In a battle",
+                PlayerState.InShop => "In a shop",
+                PlayerState.Dead => "Dead",
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
 }
