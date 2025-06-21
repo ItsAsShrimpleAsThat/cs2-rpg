@@ -21,6 +21,7 @@ Very very good news!! There isn't much setup required.
 #### Step 3 - Starting the bot in the **main menu**
 * One important thing about this bot is that it requires sv_cheats to be on **when you start it**. The bot makes heavy use of exec_async, which for some reason its cheat protected, so you need to start the bot in the main menu, where cheats are allowed.
 <br>&nbsp;
-* To create the CFG files that the game needs, just run the cs2-rpg program once, and it'll automatically create them. Then, when you've successfully created the cfg files, you can stop the program and go to the cs2 console and run "exec cs2rpg/startbot". If you see a giant spam of execing cs2rpg stuff, then you know its working.
+* To create the CFG files that the game needs, just run the cs2-rpg program once, and it'll automatically create them.
+* Once you've successfully created the cfg files, you can stop the program and go to the cs2 console and run "exec cs2rpg/startbot". If you see a giant spam of execing cs2rpg stuff, then you know its working.
 
 You can then just run the program in a game wowie.
