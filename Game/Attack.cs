@@ -11,11 +11,12 @@ namespace cs2_rpg.Game
         public string name;
         public int baseDamage;
         public double dmgVariance;
+        public double critChance;
         public Type effectiveType; // More effect against this type
         public Type resonantType; // Less effective against this type
 
 
-        public Attack(int baseDamage, double dmgVariance, Type effectiveType, Type resonantType, string name)
+        public Attack(int baseDamage, double dmgVariance, Type effectiveType, Type resonantType, double critChance, string name)
         {
             this.baseDamage = baseDamage;
             this.dmgVariance = dmgVariance;
@@ -31,7 +32,7 @@ namespace cs2_rpg.Game
             else return AttackEffectiveness.EffectiveCrit;
         }
 
-        public (int damageDealt, int opponentDefense, AttackEffectiveness effectiveness) CalculateDamageAndNewDefense(int attackerXP, int opponenetDefense, Type opponentType, double critChance)
+        public (int damageDealt, int opponentDefense, AttackEffectiveness effectiveness) CalculateDamageAndNewDefense(int attackerXP, int opponenetDefense, Type opponentType)
         {
             Random rand = new Random();
             AttackEffectiveness effectiveness = AttackEffectiveness.Effective;

@@ -24,6 +24,7 @@ namespace cs2_rpg.Game
         private int[] optionsIDs = { };
         private BattleActions[] battleActions = new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem };
         private Enemy? currentEnemy;
+        private List<Buff> activeBuffs = new List<Buff>();
 
         public Player(string username)
         {
@@ -84,7 +85,7 @@ namespace cs2_rpg.Game
                     if (attack != null)
                     {
                         // THIS IS NOT DONE, BUT I WANNA GO TO SLEEP SO THIS IS WHAT WE'RE LEAVING IT AT TONIGHT
-                        (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type, 1.0/24);
+                        (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
                         currentEnemy.health -= dmgDealt;
                         currentEnemy.defense = newDefense;
 
@@ -117,7 +118,7 @@ namespace cs2_rpg.Game
         {
             Attack chosenAttack = currentEnemy.GetRandomAttack(0.0);
 
-            (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral, 1.0/24);
+            (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral);
 
             health -= dmgDealt;
             defense = newDefense;
