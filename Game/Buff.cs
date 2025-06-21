@@ -10,5 +10,6 @@ namespace cs2_rpg.Game
     {
         public virtual string name => "Null Buff"; // This is how to make "fields" overrideable I think. Basically its a one line function that returns "Null Buff" that we can then override. I think
         public abstract void ApplyBuff(ref Attack attack);
+        public abstract bool ShouldRemoveBuff();
     }
 }

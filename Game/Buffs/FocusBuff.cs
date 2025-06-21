@@ -16,6 +16,12 @@ namespace cs2_rpg.Game.Buffs
         {
             attack.critChance *= critChanceMultiplier;
             attack.baseDamage = (int)(attack.baseDamage * dmgMultiplier);
+            turnsLeft--;
+        }
+
+        public override bool ShouldRemoveBuff()
+        {
+            return turnsLeft <= 0;
         }
     }
 }

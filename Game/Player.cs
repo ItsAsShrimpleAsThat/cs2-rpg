@@ -84,24 +84,42 @@ namespace cs2_rpg.Game
 
                     if (attack != null)
                     {
-                        // THIS IS NOT DONE, BUT I WANNA GO TO SLEEP SO THIS IS WHAT WE'RE LEAVING IT AT TONIGHT
+                        List<Buff> buffsToRemove = new List<Buff>();
+                        foreach(Buff buff in activeBuffs)
+                        {
+                            buff.ApplyBuff(ref attack);
+                            Console.WriteLine("Applying buff: " + buff.name);
+
+                            if(buff.ShouldRemoveBuff())
+                            {
+                                buffsToRemove.Add(buff);
+                            }
+                        }
+
                         (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
                         currentEnemy.health -= dmgDealt;
                         currentEnemy.defense = newDefense;
 
                         ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + currentEnemy.health + "/" + currentEnemy.maxHP + " HP and " + currentEnemy.defense + " defense.", username);
 
-                        if(currentEnemy.health <= 0)
+                        foreach (Buff toRemove in buffsToRemove)
+                        {
+                            activeBuffs.Remove(toRemove);
+                            ChatSender.SendChatMessage(toRemove.name + " wore out!", username);
+                        }
+
+                        if (currentEnemy.health <= 0)
                         {
                             WonBattle();
                         }
-
-                        EnemysMove();
                     }
                 }
                 else if (type == BattleActionType.SelfBuff)
                 {
-                    
+                    Buff addedBuff = GameConstants.battleAction2Buff[action];
+
+                    activeBuffs.Add(addedBuff);
+                    ChatSender.SendChatMessage("You used " + BattleAction.BattleActionToName(action) + ", which gave you the " + addedBuff.name + " buff!", username);
                 }
                 else if (type == BattleActionType.StatusEffect)
                 {
@@ -111,6 +129,8 @@ namespace cs2_rpg.Game
                 {
 
                 }
+
+                EnemysMove();
             }
         }
 

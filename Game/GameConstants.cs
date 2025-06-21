@@ -17,7 +17,7 @@ namespace cs2_rpg.Game
 
         public static Dictionary<BattleActions, Attack> battleAction2Attack = new Dictionary<BattleActions, Attack>()
         {
-            { BattleActions.Strike , new Attack(10, 0.1, Type.Neutral, Type.Neutral, 1.0/24, "Strike") },
+            { BattleActions.Strike , new Attack(10, 0.1, Type.Neutral, Type.Neutral, 1.0/24.0, "Strike") },
         };
         public static Dictionary<BattleActions, Buff> battleAction2Buff = new Dictionary<BattleActions, Buff>()
         {
