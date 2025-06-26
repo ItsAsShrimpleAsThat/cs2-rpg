@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    class Player
+    public class Player : Actor
     {
         public string username;
         public PlayerState playerState;
@@ -17,20 +17,15 @@ namespace cs2_rpg.Game
         public int maxAwaitingOption = -1;
         public int xp = 5;
         public int money = 5;
-        public int health = GameConstants.baseHealth;
-        public int maxHP = GameConstants.baseHealth;
-        public int defense = GameConstants.baseDefense;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
-        private BattleActions[] battleActions = new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem };
         private Enemy? currentEnemy;
-        private List<Buff> activeBuffs = new List<Buff>();
         private int livesRemaining = 2;
         private double deathMoneyMultiplier = 0.5;
         private int inventorySize = 6;
         private Dictionary<Item, int> inventory = new Dictionary<Item, int>();
 
-        public Player(string username)
+        public Player(string username) : base(GameConstants.baseHealth, GameConstants.baseHealth, GameConstants.baseDefense, 5, Type.Neutral, new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem })
         {
             this.username = username;
             this.playerState = PlayerState.Free;
@@ -73,74 +68,8 @@ namespace cs2_rpg.Game
         public void DoBattleOption(int option)
         {
             BattleActions action = battleActions[option];
-            bool doEnemysTurn = true;
 
-            if (currentEnemy != null) // To make the warnings go away
-            {
-                BattleActionType? type = BattleAction.GetBattleActionType(action);
-
-                if (type == BattleActionType.UseItem)
-                {
-                    ChatSender.SendChatMessage("What item would you like to use? Just kidding bitch, I haven't implemented this", username);
-                }
-                else if (type == BattleActionType.Attack)
-                {
-                    Attack attack = GameConstants.battleAction2Attack[action];
-
-                    if (attack != null)
-                    {
-                        List<Buff> buffsToRemove = new List<Buff>();
-                        foreach(Buff buff in activeBuffs)
-                        {
-                            buff.ApplyBuff(ref attack);
-                            Console.WriteLine("Applying buff: " + buff.name);
-
-                            if(buff.ShouldRemoveBuff())
-                            {
-                                buffsToRemove.Add(buff);
-                            }
-                        }
-
-                        (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, currentEnemy.defense, currentEnemy.type);
-                        currentEnemy.health -= dmgDealt;
-                        currentEnemy.defense = newDefense;
-
-                        ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + Math.Max(currentEnemy.health, 0) + "/" + currentEnemy.maxHP + " HP and " + currentEnemy.defense + " defense.", username);
-
-                        foreach (Buff toRemove in buffsToRemove)
-                        {
-                            activeBuffs.Remove(toRemove);
-                            ChatSender.SendChatMessage(toRemove.name + " wore out!", username);
-                        }
-
-                        if (currentEnemy.health <= 0)
-                        {
-                            doEnemysTurn = false;
-                            WonBattle();
-                        }
-                    }
-                }
-                else if (type == BattleActionType.SelfBuff)
-                {
-                    Buff addedBuff = GameConstants.battleAction2Buff[action];
-
-                    activeBuffs.Add(addedBuff);
-                    ChatSender.SendChatMessage("You used " + BattleAction.BattleActionToName(action) + ", which gave you the " + addedBuff.name + " buff!", username);
-                }
-                else if (type == BattleActionType.StatusEffect)
-                {
-
-                }
-                else if (type == BattleActionType.Defend)
-                {
-
-                }
-
-                if (doEnemysTurn)
-                {
-                    EnemysMove();
-                }
-            }
+            DoBattleOption(action, currentEnemy, username, WonBattle, EnemysMove, true);
         }
 
         public void EnemysMove()

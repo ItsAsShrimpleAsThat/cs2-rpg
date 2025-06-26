@@ -6,27 +6,15 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    internal class Enemy
+    public class Enemy : Actor
     {
         public string name;
-        public Type type;
-        public int health;
-        public int maxHP;
-        public int defense;
-        public int xp;
         public IndefiniteArticle indefiniteArticle;
-        public BattleActions[] battleActions;
-
-        public Enemy(string name, Type type, int health, int maxHP, int defense, int xp, IndefiniteArticle indefiniteArticle, BattleActions[] battleActions)
+        
+        public Enemy(string name, Type type, int health, int maxHP, int defense, int xp, IndefiniteArticle indefiniteArticle, BattleActions[] battleActions) : base(health, maxHP, defense, xp, type, battleActions)
         {
             this.name = name;
-            this.type = type;
-            this.health = health;
-            this.maxHP = maxHP;
-            this.defense = defense;
-            this.xp = xp;
             this.indefiniteArticle = indefiniteArticle;
-            this.battleActions = battleActions;
         }
 
         public string WithIndefiniteArticle()

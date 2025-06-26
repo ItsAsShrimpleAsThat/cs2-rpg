@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace cs2_rpg.Game
 {
-    internal class Item
+    public class Item
     {
         public string name;
         public string description;
