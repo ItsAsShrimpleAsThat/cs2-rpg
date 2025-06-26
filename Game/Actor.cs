@@ -76,24 +76,18 @@ namespace cs2_rpg.Game
 
 
 
-        public void DoBattleOption(BattleActions action, Actor opponent, string username, Action attackerWonBattle, Action opponentsTurn, bool isPlayer)
+        public void DoBattleOption(BattleActions action, BattleActionType actionType, Actor opponent, string username, Action attackerWonBattle, Action opponentsTurn, bool isPlayer)
         {
             bool doEnemysTurn = true;
 
             if (opponent != null)
             {
-                BattleActionType? type = BattleAction.GetBattleActionType(action);
-
-                if (type == BattleActionType.UseItem)
-                {
-                    ChatSender.SendChatMessage("What item would you like to use? Just kidding bitch, I haven't implemented this", username);
-                }
-                else if (type == BattleActionType.Attack)
+                if (actionType == BattleActionType.Attack)
                 {
                     Attack attack = GameConstants.battleAction2Attack[action];
                     DoAttack(attack, opponent, attackerWonBattle, username, isPlayer, ref doEnemysTurn);
                 }
-                else if (type == BattleActionType.SelfBuff)
+                else if (actionType == BattleActionType.SelfBuff)
                 {
                     Buff addedBuff = GameConstants.battleAction2Buff[action];
 
@@ -107,11 +101,11 @@ namespace cs2_rpg.Game
                         ChatSender.SendChatMessage("Enemy used " + BattleAction.BattleActionToName(action) + ", which gave it the " + addedBuff.name + " buff!", username);
                     }
                 }
-                else if (type == BattleActionType.StatusEffect)
+                else if (actionType == BattleActionType.StatusEffect)
                 {
                     
                 }
-                else if (type == BattleActionType.Defend)
+                else if (actionType == BattleActionType.Defend)
                 {
 
                 }

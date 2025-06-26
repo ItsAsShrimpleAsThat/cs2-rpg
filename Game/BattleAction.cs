@@ -9,7 +9,7 @@ namespace cs2_rpg.Game
 {
     public static class BattleAction
     {
-        public static BattleActionType? GetBattleActionType(BattleActions action)
+        public static BattleActionType GetBattleActionType(BattleActions action)
         {
             if ((int)action == 0)                                    // Use Item action id
             {
@@ -31,7 +31,7 @@ namespace cs2_rpg.Game
             {
                 return BattleActionType.Defend;
             }
-            return null;
+            return BattleActionType.NullActionType;
         }
 
         public static string BattleActionToName(BattleActions state)

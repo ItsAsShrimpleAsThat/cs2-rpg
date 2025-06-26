@@ -12,6 +12,7 @@ namespace cs2_rpg.Game
         Attack,
         SelfBuff,
         StatusEffect,
-        Defend
+        Defend,
+        NullActionType
     }
 }

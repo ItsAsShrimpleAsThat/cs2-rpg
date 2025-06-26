@@ -65,18 +65,27 @@ namespace cs2_rpg.Game
             return destinations;
         }
 
-        public void DoBattleOption(int option)
+        public void PlayerTurn(int option)
         {
             BattleActions action = battleActions[option];
+            BattleActionType type = BattleAction.GetBattleActionType(action);
 
-            DoBattleOption(action, currentEnemy, username, WonBattle, EnemysTurn, true);
+            if (type == BattleActionType.UseItem)
+            {
+
+            }
+            else
+            {
+                DoBattleOption(action, BattleAction.GetBattleActionType(action), currentEnemy, username, WonBattle, EnemysTurn, true);
+            }
         }
 
         public void EnemysTurn()
         {
             if (currentEnemy != null)
             {
-                currentEnemy.DoBattleOption(currentEnemy.GetRandomBattleaction(0.0), this, username, LostBattle, StartPlayersTurn, false);
+                BattleActions chosenAction = currentEnemy.GetRandomBattleaction(0.0);
+                currentEnemy.DoBattleOption(chosenAction, BattleAction.GetBattleActionType(chosenAction), this, username, LostBattle, StartPlayersTurn, false);
             }
         }
         
@@ -143,7 +152,7 @@ namespace cs2_rpg.Game
             ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
             ChatSender.SendChatMessage("It's your turn. " + PresentAsOptions<BattleActions>(battleActions, BattleAction.BattleActionToName), username);
             StartAwaitingOptions(battleActions);
-            optionCallback = DoBattleOption;
+            optionCallback = PlayerTurn;
         }
 
         public void StartAwaitingOptions<T>(T[] options)
