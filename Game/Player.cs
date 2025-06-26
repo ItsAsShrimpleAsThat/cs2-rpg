@@ -69,30 +69,14 @@ namespace cs2_rpg.Game
         {
             BattleActions action = battleActions[option];
 
-            DoBattleOption(action, currentEnemy, username, WonBattle, EnemysMove, true);
+            DoBattleOption(action, currentEnemy, username, WonBattle, EnemysTurn, true);
         }
 
-        public void EnemysMove()
+        public void EnemysTurn()
         {
             if (currentEnemy != null)
             {
-                Attack chosenAttack = currentEnemy.GetRandomAttack(0.0);
-
-                (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral);
-
-                health -= dmgDealt;
-                defense = newDefense;
-
-                ChatSender.SendChatMessage("Enemy used " + chosenAttack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ You are now at " + Math.Max(health, 0) + "/" + maxHP + " HP and " + defense + " defense.", username);
-
-                if (health <= 0)
-                {
-                    LostBattle();
-                }
-                else
-                {
-                    StartPlayersTurn();
-                }
+                currentEnemy.DoBattleOption(currentEnemy.GetRandomBattleaction(0.0), this, username, LostBattle, StartPlayersTurn, false);
             }
         }
         

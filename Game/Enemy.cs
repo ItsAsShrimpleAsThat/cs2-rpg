@@ -27,7 +27,13 @@ namespace cs2_rpg.Game
             return (from action in battleActions
                    where BattleAction.GetBattleActionType(action) == BattleActionType.Attack
                    select action).Select(i => GameConstants.battleAction2Attack[i]).ToArray();
+        }
 
+        public BattleActions GetRandomBattleaction(double intelligence)
+        {
+            intelligence = Math.Min(Math.Max(intelligence, 0.0), 1.0); // clamp01
+
+            return battleActions[0];
         }
 
         /// <summary>
