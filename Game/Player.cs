@@ -25,6 +25,10 @@ namespace cs2_rpg.Game
         private BattleActions[] battleActions = new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem };
         private Enemy? currentEnemy;
         private List<Buff> activeBuffs = new List<Buff>();
+        private int livesRemaining = 2;
+        private double deathMoneyMultiplier = 0.5;
+        private int inventorySize = 6;
+        private Dictionary<Item, int> inventory = new Dictionary<Item, int>();
 
         public Player(string username)
         {
@@ -69,6 +73,7 @@ namespace cs2_rpg.Game
         public void DoBattleOption(int option)
         {
             BattleActions action = battleActions[option];
+            bool doEnemysTurn = true;
 
             if (currentEnemy != null) // To make the warnings go away
             {
@@ -100,7 +105,7 @@ namespace cs2_rpg.Game
                         currentEnemy.health -= dmgDealt;
                         currentEnemy.defense = newDefense;
 
-                        ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + currentEnemy.health + "/" + currentEnemy.maxHP + " HP and " + currentEnemy.defense + " defense.", username);
+                        ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + Math.Max(currentEnemy.health, 0) + "/" + currentEnemy.maxHP + " HP and " + currentEnemy.defense + " defense.", username);
 
                         foreach (Buff toRemove in buffsToRemove)
                         {
@@ -110,6 +115,7 @@ namespace cs2_rpg.Game
 
                         if (currentEnemy.health <= 0)
                         {
+                            doEnemysTurn = false;
                             WonBattle();
                         }
                     }
@@ -130,22 +136,35 @@ namespace cs2_rpg.Game
 
                 }
 
-                EnemysMove();
+                if (doEnemysTurn)
+                {
+                    EnemysMove();
+                }
             }
         }
 
         public void EnemysMove()
         {
-            Attack chosenAttack = currentEnemy.GetRandomAttack(0.0);
+            if (currentEnemy != null)
+            {
+                Attack chosenAttack = currentEnemy.GetRandomAttack(0.0);
 
-            (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral);
+                (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = chosenAttack.CalculateDamageAndNewDefense(currentEnemy.xp, defense, Type.Neutral);
 
-            health -= dmgDealt;
-            defense = newDefense;
+                health -= dmgDealt;
+                defense = newDefense;
 
-            ChatSender.SendChatMessage("Enemy used " + chosenAttack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ You are now at " + health + "/" + maxHP + " HP and " + defense + " defense.", username);
+                ChatSender.SendChatMessage("Enemy used " + chosenAttack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ You are now at " + Math.Max(health, 0) + "/" + maxHP + " HP and " + defense + " defense.", username);
 
-            StartPlayersTurn();
+                if (health <= 0)
+                {
+                    LostBattle();
+                }
+                else
+                {
+                    StartPlayersTurn();
+                }
+            }
         }
         
         public void WonBattle()
@@ -176,6 +195,34 @@ namespace cs2_rpg.Game
                 playerState = PlayerState.Free;
                 StopAwaitingOptions();
             }
+        }
+
+        public void LostBattle()
+        {
+            if(livesRemaining > 0)
+            {
+                livesRemaining--;
+                //TODO: different lives remaining = different death messages, like 1 life says "be careful"
+                ChatSender.SendChatMessage("You died! Respawning, but you have " + livesRemaining + (livesRemaining == 1 ? " life remaining." : " lives remaining."), username);
+
+                money = (int)(money * deathMoneyMultiplier);
+                inventory.Clear();
+                health = maxHP;
+            }
+            else
+            {
+                ChatSender.SendChatMessage("Game Over! You cannot respawn. Type !rpg to restart", username);
+                GameOver();
+            }
+
+            currentEnemy = null;
+            playerState = PlayerState.Free;
+            StopAwaitingOptions();
+        }
+
+        public void GameOver()
+        {
+
         }
 
         public void StartPlayersTurn()
@@ -247,11 +294,6 @@ namespace cs2_rpg.Game
             int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
             int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
             return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle, prefab.battleActions);
-        }
-        
-        public void MyTurn(Enemy enemy)
-        {
-            
         }
 
         public void FindItem()
