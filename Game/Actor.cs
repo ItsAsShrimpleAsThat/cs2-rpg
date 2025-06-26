@@ -1,6 +1,9 @@
-﻿using cs2_rpg.csinterop;
+﻿using CounterStrike2GSI.Nodes;
+using cs2_rpg.csinterop;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +30,52 @@ namespace cs2_rpg.Game
             this.battleActions = battleActions;
         }
 
+        public void DoAttack(Attack attack, Actor opponent, Action attackerWonBattle, string username, bool isPlayer, ref bool doEnemysTurn)
+        {
+            if (attack != null)
+            {
+                List<Buff> buffsToRemove = new List<Buff>();
+                foreach (Buff buff in activeBuffs)
+                {
+                    buff.ApplyBuff(ref attack);
+                    Console.WriteLine("Applying buff: " + buff.name);
+
+                    if (buff.ShouldRemoveBuff())
+                    {
+                        buffsToRemove.Add(buff);
+                    }
+                }
+
+                (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, opponent.defense, opponent.type);
+                opponent.health -= dmgDealt;
+                opponent.defense = newDefense;
+
+                if (isPlayer)
+                {
+                    ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + Math.Max(opponent.health, 0) + "/" + opponent.maxHP + " HP and " + opponent.defense + " defense.", username);
+                }
+                else
+                {
+                    ChatSender.SendChatMessage("Enemy used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ You are now at " + Math.Max(opponent.health, 0) + "/" + opponent.maxHP + " HP and " + opponent.defense + " defense.", username);
+                }
+
+                foreach (Buff toRemove in buffsToRemove)
+                {
+                    activeBuffs.Remove(toRemove);
+                    ChatSender.SendChatMessage(toRemove.name + " wore out!", username);
+                }
+
+                if (opponent.health <= 0)
+                {
+                    doEnemysTurn = false;
+                    attackerWonBattle();
+                }
+            }
+        }
+
+
+
+
         public void DoBattleOption(BattleActions action, Actor opponent, string username, Action attackerWonBattle, Action opponentsTurn, bool isPlayer)
         {
             bool doEnemysTurn = true;
@@ -42,46 +91,7 @@ namespace cs2_rpg.Game
                 else if (type == BattleActionType.Attack)
                 {
                     Attack attack = GameConstants.battleAction2Attack[action];
-
-                    if (attack != null)
-                    {
-                        List<Buff> buffsToRemove = new List<Buff>();
-                        foreach (Buff buff in activeBuffs)
-                        {
-                            buff.ApplyBuff(ref attack);
-                            Console.WriteLine("Applying buff: " + buff.name);
-
-                            if (buff.ShouldRemoveBuff())
-                            {
-                                buffsToRemove.Add(buff);
-                            }
-                        }
-
-                        (int dmgDealt, int newDefense, AttackEffectiveness effectiveness) = attack.CalculateDamageAndNewDefense(xp, opponent.defense, opponent.type);
-                        opponent.health -= dmgDealt;
-                        opponent.defense = newDefense;
-
-                        if (isPlayer)
-                        {
-                            ChatSender.SendChatMessage("You used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ Enemy is now at " + Math.Max(opponent.health, 0) + "/" + opponent.maxHP + " HP and " + opponent.defense + " defense.", username);
-                        }
-                        else
-                        {
-                            ChatSender.SendChatMessage("Enemy used " + attack.name + "! " + GameConstants.attackEffectivenessDialogue[effectiveness] + " →→→ You are now at " + Math.Max(opponent.health, 0) + "/" + opponent.maxHP + " HP and " + opponent.defense + " defense.", username);
-                        }
-
-                        foreach (Buff toRemove in buffsToRemove)
-                        {
-                            activeBuffs.Remove(toRemove);
-                            ChatSender.SendChatMessage(toRemove.name + " wore out!", username);
-                        }
-
-                        if (opponent.health <= 0)
-                        {
-                            doEnemysTurn = false;
-                            attackerWonBattle();
-                        }
-                    }
+                    DoAttack(attack, opponent, attackerWonBattle, username, isPlayer, ref doEnemysTurn);
                 }
                 else if (type == BattleActionType.SelfBuff)
                 {
@@ -99,7 +109,7 @@ namespace cs2_rpg.Game
                 }
                 else if (type == BattleActionType.StatusEffect)
                 {
-
+                    
                 }
                 else if (type == BattleActionType.Defend)
                 {
