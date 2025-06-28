@@ -58,7 +58,7 @@ namespace cs2_rpg.Game
 
         public Destination[] GetExplorationOptions()
         {
-            Destination[] destinations = PickNRandomElementsFromArray<Destination>(GameConstants.allDestinations, 3);
+            Destination[] destinations = Options.PickNRandomElementsFromArray<Destination>(GameConstants.allDestinations, 3);
             StartAwaitingOptions(destinations);
             optionsIDs = destinations.Select(d=>(int)d).ToArray();
 
@@ -150,7 +150,7 @@ namespace cs2_rpg.Game
         public void StartPlayersTurn()
         {
             ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
-            ChatSender.SendChatMessage("It's your turn. " + PresentAsOptions<BattleActions>(battleActions, BattleAction.BattleActionToName), username);
+            ChatSender.SendChatMessage("It's your turn. " + Options.PresentAsOptions<BattleActions>(battleActions, BattleAction.BattleActionToName), username);
             StartAwaitingOptions(battleActions);
             optionCallback = PlayerTurn;
         }
@@ -165,28 +165,6 @@ namespace cs2_rpg.Game
         {
             isAwaitingOption = false;
             maxAwaitingOption = -1;
-        }
-
-        public string PresentAsOptions<T>(T[] options, Dictionary<T, string> nameLookup)
-        {
-            string optionsString = "";
-            for(int i = 0; i < options.Length; i++)
-            {
-                optionsString += "[" + (i + 1) + "]" + " " + nameLookup[options[i]] + (i == options.Length - 1 ? "" : ", ");
-            }
-
-            return optionsString;
-        }
-
-        public string PresentAsOptions<T>(T[] options, Func<T, string> nameLookup)
-        {
-            string optionsString = "";
-            for (int i = 0; i < options.Length; i++)
-            {
-                optionsString += "[" + (i + 1) + "]" + " " + nameLookup(options[i]) + (i == options.Length - 1 ? "" : ", ");
-            }
-
-            return optionsString;
         }
 
         public void StartBattle(Enemy enemy)
@@ -228,20 +206,6 @@ namespace cs2_rpg.Game
             return enemy.name + " [lvl: " + XP.XPToLevel(enemy.xp) + " | health: " + enemy.health.ToString() + "/" + enemy.maxHP.ToString() + " | type: " + enemy.type + "] ---ＶＳ--- " + username + " [ lvl: " + XP.XPToLevel(xp) + " | health: " + health.ToString() + "/" + maxHP.ToString() + "]";
         }
 
-        public T[] PickNRandomElementsFromArray<T>(T[] source, int num)
-        {
-            return Shuffle<T>(source).Take(num).ToArray();
-        }
-
-        public T[] Shuffle<T>(T[] items)
-        {
-            for (int i = items.Length - 1; i > 0; i--)
-            {
-                int j = random.Next(i + 1);
-                (items[i], items[j]) = (items[j], items[i]);
-            }
-
-            return items;
-        }
+        
     }
 }

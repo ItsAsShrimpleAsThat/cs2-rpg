@@ -40,7 +40,7 @@ namespace cs2_rpg.Game
                                     {
                                         player.playerState = PlayerState.Exploring;
                                         Destination[] destinations = player.GetExplorationOptions();
-                                        ChatSender.SendChatMessage("Where would you like to explore? Respond with !option #. " + player.PresentAsOptions(destinations, Destinations.DestinationToName), player.username);
+                                        ChatSender.SendChatMessage("Where would you like to explore? Respond with !option #. " + Options.PresentAsOptions(destinations, Destinations.DestinationToName), player.username);
                                         player.optionCallback = player.Explore;
                                     }
                                     else
