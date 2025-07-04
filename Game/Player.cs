@@ -23,7 +23,8 @@ namespace cs2_rpg.Game
         private int livesRemaining = 2;
         private double deathMoneyMultiplier = 0.5;
         private int inventorySize = 6;
-        private Dictionary<Item, int> inventory = new Dictionary<Item, int>();
+        private Dictionary<Items, int> inventoryCounts = new();
+        private List<Item> inventory = new();
 
         public Player(string username) : base(GameConstants.baseHealth, GameConstants.baseHealth, GameConstants.baseDefense, 5, Type.Neutral, new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem })
         {
@@ -43,7 +44,8 @@ namespace cs2_rpg.Game
             Destination pickedDestination = (Destination)pickedDestID;
             string destName = Destinations.DestinationToName(pickedDestination);
 
-            if (random.Next(0, 2) == 0)
+            //if (random.Next(0, 2) == 0)
+            if (random.Next(0, 1) == 0)
             {
                 Enemy enemy = MakeEnemy(pickedDestination);
                 ChatSender.SendChatMessage("You explored the " + destName + " and encountered " + enemy.WithIndefiniteArticle() + "!", username);
@@ -72,7 +74,9 @@ namespace cs2_rpg.Game
 
             if (type == BattleActionType.UseItem)
             {
-
+                ChatSender.SendChatMessage("Which item would you like to use? " + Options.PresentAsOptions<Item>(inventory.ToArray(), (Item item) => item.name + " (" + inventoryCounts[item.id] + ")"), username);
+                StartAwaitingOptions(inventory.ToArray());
+                optionCallback = UseItem;
             }
             else
             {
@@ -86,6 +90,36 @@ namespace cs2_rpg.Game
             {
                 BattleActions chosenAction = currentEnemy.GetRandomBattleaction(0.0);
                 currentEnemy.DoBattleOption(chosenAction, BattleAction.GetBattleActionType(chosenAction), this, username, LostBattle, StartPlayersTurn, false);
+            }
+        }
+
+        public void UseItem(int option)
+        {
+            Item itemToUse = inventory[option];
+            inventoryCounts[itemToUse.id]--;
+
+            if (inventoryCounts[itemToUse.id] <= 0)
+            {
+                inventory.RemoveAt(option);
+                inventoryCounts.Remove(itemToUse.id);
+            }
+
+            ChatSender.SendChatMessage("You used " + itemToUse.name + ".", username);
+            itemToUse.effect(this);
+
+            EnemysTurn();
+        }
+
+        public void GiveItem(Item item)
+        {
+            if(inventory.Contains(item))
+            {
+                inventoryCounts[item.id]++;
+            }
+            else
+            {
+                inventory.Add(item);
+                inventoryCounts.Add(item.id, 1);
             }
         }
         
@@ -194,11 +228,6 @@ namespace cs2_rpg.Game
             int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
             int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
             return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle, prefab.battleActions);
-        }
-
-        public void FindItem()
-        {
-
         }
 
         private string GetBattleVs(Enemy enemy)

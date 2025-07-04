@@ -1,4 +1,5 @@
-﻿using cs2_rpg.Game.Buffs;
+﻿using CounterStrike2GSI.Nodes;
+using cs2_rpg.Game.Buffs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace cs2_rpg.Game
     {
         public static Destination[] allDestinations = { Destination.Forest, Destination.Desert, Destination.Grassland, Destination.Mountain, Destination.Lake };
 
-        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!opt", "!givexp" };
+        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!opt", "!givemed" };
 
         public static BattleActions[] attackActions = { BattleActions.Strike };
 
@@ -32,6 +33,16 @@ namespace cs2_rpg.Game
             { AttackEffectiveness.EffectiveCrit , "It was super effective! (Critical hit!)"},
             { AttackEffectiveness.EffectiveTypeMatchCrit , "It was super duper effective! (Crit and Type match!)"},
             { AttackEffectiveness.EffectiveNonTypeMatchCrit , "It was effective! (Critical, but Type mismatch)"}
+        };
+
+        public static Dictionary<Items, Item> itemEnum2Item = new Dictionary<Items, Item>()
+        {
+            { Items.JuiceBox, new Item(Items.JuiceBox, "Juice Box", "Restores 10 HP",                 (p) => { p.health = Math.Min(p.health + 10,          p.maxHP); }) },
+            { Items.Bandage, new Item(Items.Bandage, "Bandage", "Restores 25% of max health",         (p) => { p.health = Math.Min(p.health + p.maxHP / 4, p.maxHP); }) },
+            { Items.Medkit, new Item(Items.Medkit, "Medkit", "Restores 50% of max health",            (p) => { p.health = Math.Min(p.health + p.maxHP / 2, p.maxHP); }) },
+            { Items.MaxPotion, new Item(Items.MaxPotion, "Max Potion", "Restores 100% of max health", (p) => { p.health = p.maxHP; }) },
+            { Items.PaddedVest, new Item(Items.PaddedVest, "Padded Vest", "Gives 8 defense",          (p) => { p.defense += 8; }) },
+            { Items.Chainmail, new Item(Items.Chainmail, "Chainmail", "Gives 15 defense",             (p) => { p.defense += 15; }) },
         };
 
         public static readonly int baseHealth = 30;

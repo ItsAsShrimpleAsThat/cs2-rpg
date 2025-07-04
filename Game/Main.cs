@@ -49,10 +49,9 @@ namespace cs2_rpg.Game
                                     }
                                     break;
 
-                                case "!givexp":
-                                    Console.WriteLine("HELLO I AM GIVING XP ALERT ALERT");
-                                    player.xp += 50;
-                                    ChatSender.SendChatMessage( "Your XP is " + player.xp, player.username);
+                                case "!givemed":
+                                    Console.WriteLine("HELLO I AM GIVING MEDKIT ALERT ALERT");
+                                    player.GiveItem(GameConstants.itemEnum2Item[Items.Medkit]);
                                     break;
 
                                 case "!option": 
