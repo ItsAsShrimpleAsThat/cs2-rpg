@@ -74,9 +74,17 @@ namespace cs2_rpg.Game
 
             if (type == BattleActionType.UseItem)
             {
-                ChatSender.SendChatMessage("Which item would you like to use? " + Options.PresentAsOptions<Item>(inventory.ToArray(), (Item item) => item.name + " (" + inventoryCounts[item.id] + ")"), username);
-                StartAwaitingOptions(inventory.ToArray());
-                optionCallback = UseItem;
+                if (inventory.Count > 0)
+                {
+                    ChatSender.SendChatMessage("Which item would you like to use? " + Options.PresentAsOptions<Item>(inventory.ToArray(), (Item item) => item.name + " (" + inventoryCounts[item.id] + ")"), username);
+                    StartAwaitingOptions(inventory.ToArray());
+                    optionCallback = UseItem;
+                }
+                else
+                {
+                    ChatSender.SendChatMessage("You have no items.", username);
+                    StartPlayersTurn();
+                }
             }
             else
             {
