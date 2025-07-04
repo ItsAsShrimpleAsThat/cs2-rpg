@@ -53,7 +53,7 @@ namespace cs2_rpg.Game
         // This is where enemy battle difficulty is scaled. Change if game is too easy/difficult I might make it exponential if it turns out too easyyyy
         public static int PlayerXPtoEnemyXP(int playerXP)
         {
-            return (int)(playerXP * ((((RNG.NextDouble() * 2) - 1.0) * 0.1) + (1.0 - 0.2)));
+            return (int)(playerXP * ((RNG.NextDouble_n1_1() * 0.1) + (1.0 - 0.2)));
         }
     }
 }

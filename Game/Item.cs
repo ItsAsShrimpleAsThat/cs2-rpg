@@ -23,7 +23,10 @@ namespace cs2_rpg.Game
 
         public Item RandomItem()
         {
-            
+            ItemRarity rarity;
+            double rand = RNG.NextDouble();
+
+            return GameConstants.itemEnum2Item[Items.JuiceBox];
         }
     }
 }

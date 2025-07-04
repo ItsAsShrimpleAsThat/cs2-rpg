@@ -15,6 +15,11 @@ namespace cs2_rpg.Game
             return rand.NextDouble();
         }
 
+        public static double NextDouble_n1_1()
+        {
+            return (rand.NextDouble() * 2.0) - 1.0;
+        }
+
         public static int Next(int min, int max)
         {
             return rand.Next(min, max);

@@ -133,8 +133,8 @@ namespace cs2_rpg.Game
         {
             if (currentEnemy != null)
             {
-                int moneyEarned = (int)((currentEnemy.xp * GameConstants.moneyWinScale + GameConstants.baseMoneyReward) * ((((RNG.NextDouble() * 2.0) - 1.0) * GameConstants.moneyRewardVariance) + 1.0));
-                int xpEarned = (int)((currentEnemy.xp * GameConstants.xpWinScale + GameConstants.baseXPReward) * ((((RNG.NextDouble() * 2.0) - 1.0) * GameConstants.xpRewardVariance) + 1.0));
+                int moneyEarned = (int)((currentEnemy.xp * GameConstants.moneyWinScale + GameConstants.baseMoneyReward) * ((RNG.NextDouble_n1_1() * GameConstants.moneyRewardVariance) + 1.0));
+                int xpEarned = (int)((currentEnemy.xp * GameConstants.xpWinScale + GameConstants.baseXPReward) * ((RNG.NextDouble_n1_1() * GameConstants.xpRewardVariance) + 1.0));
                 ChatSender.SendChatMessage("You successfully defeated the " + currentEnemy.name + "! " + " You earned $" + moneyEarned.ToString() + " and gained " + xpEarned + " xp!", username);
 
                 int oldXP = xp;
@@ -231,8 +231,8 @@ namespace cs2_rpg.Game
             EnemyPrefab prefab = Enemies.GetRandomPrefabFromType(enemyType);
 
             int enemyXP = Enemies.PlayerXPtoEnemyXP(xp);
-            int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (RNG.NextDouble() * 2 - 1)));
-            int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (RNG.NextDouble() * 2 - 1)));
+            int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * RNG.NextDouble_n1_1()));
+            int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * RNG.NextDouble_n1_1()));
             return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle, prefab.battleActions);
         }
 

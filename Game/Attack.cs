@@ -49,7 +49,7 @@ namespace cs2_rpg.Game
             }
 
             // randomize dmg a bit
-            scaledDmg *= (1.0 + ((RNG.NextDouble() * 2) - 1.0) * dmgVariance);
+            scaledDmg *= (1.0 + (RNG.NextDouble_n1_1() * dmgVariance));
 
             // Crits because i guess rpgs have to do that
             if(RNG.NextDouble() <= critChance)
