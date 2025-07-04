@@ -57,5 +57,10 @@ namespace cs2_rpg.Game
         public static readonly double xpWinScale = 0.75;
         public static readonly double baseXPReward = 7;
         public static readonly double xpRewardVariance = 0.25;
+
+        public static readonly double legendaryRarity = 0.01;
+        public static readonly double rareRarity = 0.05;
+        public static readonly double uncommonRarity = 0.25;
+        public static readonly double commonRarity = 1.0 - legendaryRarity - rareRarity - uncommonRarity;
     }
 }

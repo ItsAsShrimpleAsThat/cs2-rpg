@@ -9,7 +9,6 @@ namespace cs2_rpg.Game
 {
     internal static class Enemies
     {
-        private static Random rand = new Random();
         public static EnemyPrefab[] earthEnemies =
         {
             new EnemyPrefab("Stoneback", Type.Earth, 0.0, 0.0, IndefiniteArticle.a, new BattleActions[] { BattleActions.Strike }),
@@ -48,13 +47,13 @@ namespace cs2_rpg.Game
         public static EnemyPrefab GetRandomPrefabFromType(Type type)
         {
             EnemyPrefab[] prefabs = GetPrefabsFromType(type);
-            return prefabs[rand.Next(0, prefabs.Length)];
+            return prefabs[RNG.Next(0, prefabs.Length)];
         }
 
         // This is where enemy battle difficulty is scaled. Change if game is too easy/difficult I might make it exponential if it turns out too easyyyy
         public static int PlayerXPtoEnemyXP(int playerXP)
         {
-            return (int)(playerXP * ((((rand.NextDouble() * 2) - 1.0) * 0.1) + (1.0 - 0.2)));
+            return (int)(playerXP * ((((RNG.NextDouble() * 2) - 1.0) * 0.1) + (1.0 - 0.2)));
         }
     }
 }

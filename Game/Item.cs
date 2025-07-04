@@ -20,5 +20,10 @@ namespace cs2_rpg.Game
             this.effect = effect;
             this.id = id;
         }
+
+        public Item RandomItem()
+        {
+            
+        }
     }
 }

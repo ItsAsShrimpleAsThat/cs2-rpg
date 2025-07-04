@@ -8,8 +8,6 @@ namespace cs2_rpg.Game
 {
     public static class Options
     {
-        private static Random random = new Random();
-
         public static T[] PickNRandomElementsFromArray<T>(T[] source, int num)
         {
             return Shuffle<T>(source).Take(num).ToArray();
@@ -19,7 +17,7 @@ namespace cs2_rpg.Game
         {
             for (int i = items.Length - 1; i > 0; i--)
             {
-                int j = random.Next(i + 1);
+                int j = RNG.Next(i + 1);
                 (items[i], items[j]) = (items[j], items[i]);
             }
 

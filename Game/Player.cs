@@ -36,8 +36,6 @@ namespace cs2_rpg.Game
             this.defense = (int)(XP.XPtoDefense(xp));
         }
 
-        private Random random = new Random();
-
         public void Explore(int option)
         {
             int pickedDestID = optionsIDs[option];
@@ -45,7 +43,7 @@ namespace cs2_rpg.Game
             string destName = Destinations.DestinationToName(pickedDestination);
 
             //if (random.Next(0, 2) == 0)
-            if (random.Next(0, 1) == 0)
+            if (RNG.Next(0, 1) == 0)
             {
                 Enemy enemy = MakeEnemy(pickedDestination);
                 ChatSender.SendChatMessage("You explored the " + destName + " and encountered " + enemy.WithIndefiniteArticle() + "!", username);
@@ -135,8 +133,8 @@ namespace cs2_rpg.Game
         {
             if (currentEnemy != null)
             {
-                int moneyEarned = (int)((currentEnemy.xp * GameConstants.moneyWinScale + GameConstants.baseMoneyReward) * ((((random.NextDouble() * 2.0) - 1.0) * GameConstants.moneyRewardVariance) + 1.0));
-                int xpEarned = (int)((currentEnemy.xp * GameConstants.xpWinScale + GameConstants.baseXPReward) * ((((random.NextDouble() * 2.0) - 1.0) * GameConstants.xpRewardVariance) + 1.0));
+                int moneyEarned = (int)((currentEnemy.xp * GameConstants.moneyWinScale + GameConstants.baseMoneyReward) * ((((RNG.NextDouble() * 2.0) - 1.0) * GameConstants.moneyRewardVariance) + 1.0));
+                int xpEarned = (int)((currentEnemy.xp * GameConstants.xpWinScale + GameConstants.baseXPReward) * ((((RNG.NextDouble() * 2.0) - 1.0) * GameConstants.xpRewardVariance) + 1.0));
                 ChatSender.SendChatMessage("You successfully defeated the " + currentEnemy.name + "! " + " You earned $" + moneyEarned.ToString() + " and gained " + xpEarned + " xp!", username);
 
                 int oldXP = xp;
@@ -216,7 +214,7 @@ namespace cs2_rpg.Game
 
             //if (random.Next(0, 2) == 0)
             //TODO: remove this
-            if (random.Next(0, 1) == 0)
+            if (RNG.Next(0, 1) == 0)
             {
                 StartPlayersTurn();
             }
@@ -229,12 +227,12 @@ namespace cs2_rpg.Game
 
         private Enemy MakeEnemy(Destination dest)
         {
-            Type enemyType = Types.TypesInDests(dest)[random.Next(0, 2)];
+            Type enemyType = Types.TypesInDests(dest)[RNG.Next(0, 2)];
             EnemyPrefab prefab = Enemies.GetRandomPrefabFromType(enemyType);
 
             int enemyXP = Enemies.PlayerXPtoEnemyXP(xp);
-            int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (random.NextDouble() * 2 - 1)));
-            int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (random.NextDouble() * 2 - 1)));
+            int enemyHP = (int)(XP.XPtoHP(enemyXP) * (1.0 + prefab.hpVariance * (RNG.NextDouble() * 2 - 1)));
+            int enemyDefense = (int)(XP.XPtoDefense(enemyXP) * (1.0 + prefab.defenseVariance * (RNG.NextDouble() * 2 - 1)));
             return new Enemy(prefab.name, prefab.type, enemyHP, enemyHP, enemyDefense, enemyXP, prefab.indefiniteArticle, prefab.battleActions);
         }
 

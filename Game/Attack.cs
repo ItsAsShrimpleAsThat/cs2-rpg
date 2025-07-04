@@ -34,7 +34,6 @@ namespace cs2_rpg.Game
 
         public (int damageDealt, int opponentDefense, AttackEffectiveness effectiveness) CalculateDamageAndNewDefense(int attackerXP, int opponenetDefense, Type opponentType)
         {
-            Random rand = new Random();
             AttackEffectiveness effectiveness = AttackEffectiveness.Effective;
 
             double scaledDmg = baseDamage + attackerXP * GameConstants.attackDmgXPScale;
@@ -50,10 +49,10 @@ namespace cs2_rpg.Game
             }
 
             // randomize dmg a bit
-            scaledDmg *= (1.0 + ((rand.NextDouble() * 2) - 1.0) * dmgVariance);
+            scaledDmg *= (1.0 + ((RNG.NextDouble() * 2) - 1.0) * dmgVariance);
 
             // Crits because i guess rpgs have to do that
-            if(rand.NextDouble() <= critChance)
+            if(RNG.NextDouble() <= critChance)
             {
                 scaledDmg *= 1.5;
                 effectiveness = AddCrit(effectiveness);
