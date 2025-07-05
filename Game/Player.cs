@@ -22,9 +22,9 @@ namespace cs2_rpg.Game
         private Enemy? currentEnemy;
         private int livesRemaining = 2;
         private double deathMoneyMultiplier = 0.5;
-        private int inventorySize = 6;
-        private Dictionary<Items, int> inventoryCounts = new();
-        private List<Item> inventory = new();
+        public int inventorySize = 6;
+        public Dictionary<Items, int> inventoryCounts = new();
+        public List<Item> inventory = new();
 
         public Player(string username) : base(GameConstants.baseHealth, GameConstants.baseHealth, GameConstants.baseDefense, 5, Type.Neutral, new BattleActions[5] { BattleActions.Strike, BattleActions.Focus, BattleActions.Sting, BattleActions.Defend, BattleActions.UseItem })
         {
@@ -42,8 +42,7 @@ namespace cs2_rpg.Game
             Destination pickedDestination = (Destination)pickedDestID;
             string destName = Destinations.DestinationToName(pickedDestination);
 
-            //if (random.Next(0, 2) == 0)
-            if (RNG.Next(0, 1) == 0)
+            if (random.Next(0, 2) == 0)
             {
                 Enemy enemy = MakeEnemy(pickedDestination);
                 ChatSender.SendChatMessage("You explored the " + destName + " and encountered " + enemy.WithIndefiniteArticle() + "!", username);
@@ -51,7 +50,22 @@ namespace cs2_rpg.Game
             }
             else
             {
-                ChatSender.SendChatMessage("You explored the " + destName + " and found a [item]", username);
+                Item foundItem = Item.RandomItem();
+                ItemGiveResult giveResult = Item.CanGiveItem(this, foundItem);
+
+                if (giveResult == ItemGiveResult.Success)
+                {
+                    ChatSender.SendChatMessage("You explored the " + destName + " and found a " + foundItem.name, username);
+                }
+                else if (giveResult == ItemGiveResult.InventoryFull)
+                {
+                    ChatSender.SendChatMessage("Couldn't pick up the " + foundItem.name + " you found because your inventory is full", username);
+                }
+                else if (giveResult == ItemGiveResult.ItemStackFull)
+                {
+                    ChatSender.SendChatMessage("Couldn't pick up the " + foundItem.name + " you found because you hit the max stack size (" + foundItem.maxStackSize + ")", username);
+                }
+
                 playerState = PlayerState.Free;
             }
         }

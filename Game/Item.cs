@@ -11,13 +11,24 @@ namespace cs2_rpg.Game
         public string name;
         public Items id;
         public string description;
+        public int maxStackSize;
         public Action<Player> effect;
 
-        public Item(Items id, string name, string description, Action<Player> effect) 
+        public Item(Items id, string name, int maxStackSize, string description, Action<Player> effect) 
         {
             this.name = name;
             this.description = description; 
             this.effect = effect;
+            this.maxStackSize = maxStackSize;
+            this.id = id;
+        }
+
+        public Item(Items id, string name, string description, Action<Player> effect)
+        {
+            this.name = name;
+            this.description = description;
+            this.effect = effect;
+            this.maxStackSize = int.MaxValue;
             this.id = id;
         }
 
@@ -41,6 +52,12 @@ namespace cs2_rpg.Game
             {
                 return GameConstants.itemEnum2Item[GameConstants.commonItems[RNG.Next(GameConstants.commonItems.Length)]];
             }
+        }
+
+        public static ItemGiveResult CanGiveItem(Player player, Item itemToGive)
+        {
+            if (player.inventory.Count >= player.inventorySize) return ItemGiveResult.InventoryFull;
+            
         }
     }
 }
