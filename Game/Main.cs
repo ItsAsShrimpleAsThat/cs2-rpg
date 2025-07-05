@@ -52,6 +52,7 @@ namespace cs2_rpg.Game
                                 case "!givemed":
                                     Console.WriteLine("HELLO I AM GIVING MEDKIT ALERT ALERT");
                                     player.GiveItem(GameConstants.itemEnum2Item[Items.Medkit]);
+                                    Console.WriteLine(Item.RandomItem().name);
                                     break;
 
                                 case "!option": 

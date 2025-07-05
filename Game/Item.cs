@@ -21,12 +21,26 @@ namespace cs2_rpg.Game
             this.id = id;
         }
 
-        public Item RandomItem()
+        public static Item RandomItem()
         {
-            ItemRarity rarity;
-            double rand = RNG.NextDouble();
+            double rarityRand = RNG.NextDouble();
 
-            return GameConstants.itemEnum2Item[Items.JuiceBox];
+            if(rarityRand < GameConstants.legendaryRarity)
+            {
+                return GameConstants.itemEnum2Item[GameConstants.legendaryItems[RNG.Next(GameConstants.legendaryItems.Length)]];
+            }
+            else if (rarityRand < GameConstants.rareRarity + GameConstants.legendaryRarity)
+            {
+                return GameConstants.itemEnum2Item[GameConstants.rareItems[RNG.Next(GameConstants.rareItems.Length)]];
+            }
+            else if (rarityRand < GameConstants.uncommonRarity + GameConstants.rareRarity + GameConstants.legendaryRarity)
+            {
+                return GameConstants.itemEnum2Item[GameConstants.uncommonItems[RNG.Next(GameConstants.uncommonItems.Length)]];
+            }
+            else
+            {
+                return GameConstants.itemEnum2Item[GameConstants.commonItems[RNG.Next(GameConstants.commonItems.Length)]];
+            }
         }
     }
 }
