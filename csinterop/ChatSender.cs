@@ -23,6 +23,11 @@ namespace cs2_rpg.csinterop
             messageQueue.Enqueue(new EnqueuedMessage("[𝙲𝚂𝟸 𝚁𝙿𝙶] " + "@" + recipient + " " + message, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
 
             Console.WriteLine("Enqueueing Message to " + recipient + " of length " + message.Length + ": " + message);
+
+            if(message.Length + 50 > 220)
+            {
+                Console.WriteLine("WARNING: Message is at risk of overruning limit with a 32 character steam name");
+            }
         }
 
 
