@@ -49,6 +49,11 @@ namespace cs2_rpg.Game
                                     }
                                     break;
 
+                                case "!inv":
+                                case "!inventory":
+                                    player.ShowInventory(player.optionCallback);
+                                    break;
+
                                 case "!givemed":
                                     Console.WriteLine("HELLO I AM GIVING MEDKIT ALERT ALERT");
                                     player.GiveItem(GameConstants.itemEnum2Item[Items.Medkit]);
@@ -88,7 +93,7 @@ namespace cs2_rpg.Game
                                     break;
                                 case "!help":
                                     ChatSender.SendChatMessage("Here are all commands in CS2 RPG. !rpg - join the rpg (you've already done this!) | !help - this command | !explore - begin an exploration to find an item or fight an enemy");
-                                    ChatSender.SendChatMessage("!option [#] or !opt [#] - select an option if you've been prompted to");
+                                    ChatSender.SendChatMessage("!option [#] or !opt [#] - select an option if you've been prompted to | !inventory or !inv - shows your inventory");
                                     break;
                             }
                         }

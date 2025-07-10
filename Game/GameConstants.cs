@@ -12,7 +12,7 @@ namespace cs2_rpg.Game
     {
         public static Destination[] allDestinations = { Destination.Forest, Destination.Desert, Destination.Grassland, Destination.Mountain, Destination.Lake };
 
-        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!opt", "!givemed" };
+        public static string[] allCommands = { "!rpg", "!explore", "!help", "!option", "!opt", "!givemed", "!inv", "!inventory" };
 
         public static BattleActions[] attackActions = { BattleActions.Strike };
 

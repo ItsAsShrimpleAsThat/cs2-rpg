@@ -200,10 +200,16 @@ namespace cs2_rpg.Game
 
         }
 
+        public void ShowInventory(Action<int>? oldCallback)
+        {
+            Console.WriteLine(inventory.Count);
+            ChatSender.SendChatMessage("Inventory (!option [#] for info): " + Options.PresentAsOptions(inventory.ToArray(), (item) => { return item.name; }), username);
+        }
+
         public void StartPlayersTurn()
         {
             ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
-            ChatSender.SendChatMessage("It's your turn. " + Options.PresentAsOptions<BattleActions>(battleActions, BattleAction.BattleActionToName), username);
+            ChatSender.SendChatMessage("It's your turn. " + Options.PresentAsOptions(battleActions, BattleAction.BattleActionToName), username);
             StartAwaitingOptions(battleActions);
             optionCallback = PlayerTurn;
         }
