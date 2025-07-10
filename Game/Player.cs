@@ -54,7 +54,7 @@ namespace cs2_rpg.Game
 
                 if (giveResult == ItemGiveResult.Success)
                 {
-                    ChatSender.SendChatMessage("You explored the " + destName + " and found a " + foundItem.name, username);
+                    ChatSender.SendChatMessage("You explored the " + destName + " and found " + foundItem.WithIndefiniteArticle(), username);
                 }
                 else if (giveResult == ItemGiveResult.InventoryFull)
                 {

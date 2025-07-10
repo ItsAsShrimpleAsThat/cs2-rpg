@@ -13,8 +13,9 @@ namespace cs2_rpg.Game
         public string description;
         public int maxStackSize;
         public Action<Player> effect;
+        public IndefiniteArticle indefiniteArticle;
 
-        public Item(Items id, string name, int maxStackSize, string description, Action<Player> effect) 
+        public Item(Items id, string name, int maxStackSize, string description, IndefiniteArticle indefiniteArticle, Action<Player> effect) 
         {
             this.name = name;
             this.description = description; 
@@ -23,7 +24,7 @@ namespace cs2_rpg.Game
             this.id = id;
         }
 
-        public Item(Items id, string name, string description, Action<Player> effect)
+        public Item(Items id, string name, string description, IndefiniteArticle indefiniteArticle, Action<Player> effect)
         {
             this.name = name;
             this.description = description;
@@ -60,6 +61,11 @@ namespace cs2_rpg.Game
             else if (!player.inventoryCounts.ContainsKey(itemToGive.id)) return ItemGiveResult.Success;
             else if (player.inventoryCounts[itemToGive.id] > itemToGive.maxStackSize) return ItemGiveResult.ItemStackFull;
             else return ItemGiveResult.Success;
+        }
+
+        public string WithIndefiniteArticle()
+        {
+            return indefiniteArticle.ToString() + " " + name;
         }
     }
 }

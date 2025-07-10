@@ -37,12 +37,12 @@ namespace cs2_rpg.Game
 
         public static Dictionary<Items, Item> itemEnum2Item = new Dictionary<Items, Item>()
         {
-            { Items.JuiceBox, new Item(Items.JuiceBox, "Juice Box", "Restores 10 HP",                 (p) => { p.health = Math.Min(p.health + 10,          p.maxHP); }) },
-            { Items.Bandage, new Item(Items.Bandage, "Bandage", "Restores 25% of max health",         (p) => { p.health = Math.Min(p.health + p.maxHP / 4, p.maxHP); }) },
-            { Items.Medkit, new Item(Items.Medkit, "Medkit", "Restores 50% of max health",            (p) => { p.health = Math.Min(p.health + p.maxHP / 2, p.maxHP); }) },
-            { Items.MaxPotion, new Item(Items.MaxPotion, "Max Potion", "Restores 100% of max health", (p) => { p.health = p.maxHP; }) },
-            { Items.PaddedVest, new Item(Items.PaddedVest, "Padded Vest", "Gives 8 defense",          (p) => { p.defense += 8; }) },
-            { Items.Chainmail, new Item(Items.Chainmail, "Chainmail", "Gives 15 defense",             (p) => { p.defense += 15; }) },
+            { Items.JuiceBox, new Item(Items.JuiceBox, "Juice Box", "Restores 10 HP",                 IndefiniteArticle.a, (p) => { p.health = Math.Min(p.health + 10,          p.maxHP); }) },
+            { Items.Bandage, new Item(Items.Bandage, "Bandage", "Restores 25% of max health",         IndefiniteArticle.a, (p) => { p.health = Math.Min(p.health + p.maxHP / 4, p.maxHP); }) },
+            { Items.Medkit, new Item(Items.Medkit, "Medkit", "Restores 50% of max health",            IndefiniteArticle.a, (p) => { p.health = Math.Min(p.health + p.maxHP / 2, p.maxHP); }) },
+            { Items.MaxPotion, new Item(Items.MaxPotion, "Max Potion", "Restores 100% of max health", IndefiniteArticle.a, (p) => { p.health = p.maxHP; }) },
+            { Items.PaddedVest, new Item(Items.PaddedVest, "Padded Vest", "Gives 8 defense",          IndefiniteArticle.a, (p) => { p.defense += 8; }) },
+            { Items.Chainmail, new Item(Items.Chainmail, "Chainmail", "Gives 15 defense",             IndefiniteArticle.a, (p) => { p.defense += 15; }) },
         };
 
         public static Items[] legendaryItems = { };
