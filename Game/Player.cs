@@ -15,7 +15,6 @@ namespace cs2_rpg.Game
         public PlayerState playerState;
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
-        public int xp = 5;
         public int money = 5;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
@@ -42,7 +41,7 @@ namespace cs2_rpg.Game
             Destination pickedDestination = (Destination)pickedDestID;
             string destName = Destinations.DestinationToName(pickedDestination);
 
-            if (RNG.Next(0, 2) == 0)
+            if (RNG.Next(0, 1) == 1)
             {
                 Enemy enemy = MakeEnemy(pickedDestination);
                 ChatSender.SendChatMessage("You explored the " + destName + " and encountered " + enemy.WithIndefiniteArticle() + "!", username);

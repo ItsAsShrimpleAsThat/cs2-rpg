@@ -57,7 +57,8 @@ namespace cs2_rpg.Game
         public static ItemGiveResult CanGiveItem(Player player, Item itemToGive)
         {
             if (player.inventory.Count >= player.inventorySize) return ItemGiveResult.InventoryFull;
-            else if (player.inventoryCounts[itemToGive.id] >  itemToGive.maxStackSize) return ItemGiveResult.ItemStackFull;
+            else if (!player.inventoryCounts.ContainsKey(itemToGive.id)) return ItemGiveResult.Success;
+            else if (player.inventoryCounts[itemToGive.id] > itemToGive.maxStackSize) return ItemGiveResult.ItemStackFull;
             else return ItemGiveResult.Success;
         }
     }
