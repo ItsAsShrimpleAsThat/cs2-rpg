@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace cs2_rpg.Game
         public PlayerState playerState;
         public bool isAwaitingOption = false;
         public int maxAwaitingOption = -1;
+        public string lastOptionsString;
         public int money = 5;
         public Action<int>? optionCallback;
         private int[] optionsIDs = { };
@@ -41,7 +43,7 @@ namespace cs2_rpg.Game
             Destination pickedDestination = (Destination)pickedDestID;
             string destName = Destinations.DestinationToName(pickedDestination);
 
-            if (RNG.Next(0, 1) == 1)
+            if (RNG.Next(0, 2) == 0)
             {
                 Enemy enemy = MakeEnemy(pickedDestination);
                 ChatSender.SendChatMessage("You explored the " + destName + " and encountered " + enemy.WithIndefiniteArticle() + "!", username);
@@ -54,6 +56,7 @@ namespace cs2_rpg.Game
 
                 if (giveResult == ItemGiveResult.Success)
                 {
+                    GiveItem(foundItem);
                     ChatSender.SendChatMessage("You explored the " + destName + " and found " + foundItem.WithIndefiniteArticle(), username);
                 }
                 else if (giveResult == ItemGiveResult.InventoryFull)
@@ -87,7 +90,7 @@ namespace cs2_rpg.Game
             {
                 if (inventory.Count > 0)
                 {
-                    ChatSender.SendChatMessage("Which item would you like to use? " + Options.PresentAsOptions<Item>(inventory.ToArray(), (Item item) => item.name + " (" + inventoryCounts[item.id] + ")"), username);
+                    ChatSender.SendChatMessage("Which item would you like to use? " + Options.PresentAsOptions<Item>(inventory.ToArray(), (Item item) => item.name + " (" + inventoryCounts[item.id] + ")", out lastOptionsString), username);
                     StartAwaitingOptions(inventory.ToArray());
                     optionCallback = UseItem;
                 }
@@ -200,16 +203,44 @@ namespace cs2_rpg.Game
 
         }
 
+        private Action<int>? oldCallback = null;
+        private int oldMaxOption;
         public void ShowInventory(Action<int>? oldCallback)
         {
-            Console.WriteLine(inventory.Count);
-            ChatSender.SendChatMessage("Inventory (!option [#] for info): " + Options.PresentAsOptions(inventory.ToArray(), (item) => { return item.name; }), username);
+            this.oldCallback = isAwaitingOption ? oldCallback : null;
+            this.oldMaxOption = maxAwaitingOption;
+
+            List<Item> withExitOption = new(inventory);
+            withExitOption.Add(Item.useItemItem);
+            //withExitOption.Add(Item.exitInventoryItem);
+            string dummy;
+            ChatSender.SendChatMessage("Inventory (!option [#] for info): " + Options.PresentAsOptions(withExitOption.ToArray(), (item) => { if (item.id != Items.ExitInventory) return item.name + " (" + inventoryCounts[item.id] + ")"; else return "Exit"; }, out dummy), username);
+            StartAwaitingOptions(withExitOption.ToArray());
+            optionCallback = DescribeInventoryItem;
+        }
+
+        public void DescribeInventoryItem(int option)
+        {
+            if (option < inventory.Count)
+            {
+                Item itemToDescribe = inventory[option];
+                ChatSender.SendChatMessage(itemToDescribe.name + ": " + itemToDescribe.description, username);
+            }
+
+            if (oldCallback != null)
+            {
+                ChatSender.SendChatMessage("Choose option: " + lastOptionsString, username);
+            }
+
+            isAwaitingOption = true;
+            maxAwaitingOption = oldMaxOption;
+            optionCallback = oldCallback;
         }
 
         public void StartPlayersTurn()
         {
             ChatSender.SendChatMessage(GetBattleVs(currentEnemy), username);
-            ChatSender.SendChatMessage("It's your turn. " + Options.PresentAsOptions(battleActions, BattleAction.BattleActionToName), username);
+            ChatSender.SendChatMessage("It's your turn. " + Options.PresentAsOptions(battleActions, BattleAction.BattleActionToName, out lastOptionsString), username);
             StartAwaitingOptions(battleActions);
             optionCallback = PlayerTurn;
         }

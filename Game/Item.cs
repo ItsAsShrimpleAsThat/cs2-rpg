@@ -14,6 +14,8 @@ namespace cs2_rpg.Game
         public int maxStackSize;
         public Action<Player> effect;
         public IndefiniteArticle indefiniteArticle;
+        public static readonly Item exitInventoryItem = new Item(Items.ExitInventory, "ExitInventory", "Exits Inventory", IndefiniteArticle.an, (p) => { });
+        public static readonly Item useItemItem = new Item(Items.UseItem, "UseItem", "Uses Item", IndefiniteArticle.a, (p) => { });
 
         public Item(Items id, string name, int maxStackSize, string description, IndefiniteArticle indefiniteArticle, Action<Player> effect) 
         {

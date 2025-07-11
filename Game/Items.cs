@@ -8,6 +8,8 @@ namespace cs2_rpg.Game
 {
     public enum Items
     {
+        UseItem,
+        ExitInventory,
         JuiceBox,
         Bandage,
         Medkit,

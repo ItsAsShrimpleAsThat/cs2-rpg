@@ -23,7 +23,7 @@ namespace cs2_rpg.Game
 
             return items;
         }
-        public static string PresentAsOptions<T>(T[] options, Dictionary<T, string> nameLookup)
+        public static string PresentAsOptions<T>(T[] options, Dictionary<T, string> nameLookup, out string lastOptionsString)
         {
             string optionsString = "";
             for (int i = 0; i < options.Length; i++)
@@ -31,10 +31,11 @@ namespace cs2_rpg.Game
                 optionsString += "[" + (i + 1) + "]" + " " + nameLookup[options[i]] + (i == options.Length - 1 ? "" : ", ");
             }
 
+            lastOptionsString = optionsString;
             return optionsString;
         }
 
-        public static string PresentAsOptions<T>(T[] options, Func<T, string> nameLookup)
+        public static string PresentAsOptions<T>(T[] options, Func<T, string> nameLookup, out string lastOptionsString)
         {
             string optionsString = "";
             for (int i = 0; i < options.Length; i++)
@@ -42,6 +43,7 @@ namespace cs2_rpg.Game
                 optionsString += "[" + (i + 1) + "]" + " " + nameLookup(options[i]) + (i == options.Length - 1 ? "" : ", ");
             }
 
+            lastOptionsString = optionsString;
             return optionsString;
         }
     }

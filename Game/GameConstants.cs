@@ -45,10 +45,10 @@ namespace cs2_rpg.Game
             { Items.Chainmail, new Item(Items.Chainmail, "Chainmail", "Gives 15 defense",             IndefiniteArticle.a, (p) => { p.defense += 15; }) },
         };
 
-        public static Items[] legendaryItems = { };
-        public static Items[] rareItems = { Items.MaxPotion };
-        public static Items[] uncommonItems = { Items.Medkit, Items.Chainmail };
-        public static Items[] commonItems = { Items.JuiceBox, Items.Bandage, Items.PaddedVest };
+        public static readonly Items[] legendaryItems = { };
+        public static readonly Items[] rareItems = { Items.MaxPotion };
+        public static readonly Items[] uncommonItems = { Items.Medkit, Items.Chainmail };
+        public static readonly Items[] commonItems = { Items.JuiceBox, Items.Bandage, Items.PaddedVest };
 
         public static readonly int baseHealth = 30;
         public static readonly int baseDefense = 8;
